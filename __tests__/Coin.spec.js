@@ -29,6 +29,10 @@ describe("Coin tests", () => {
       const negCoin = new Coin(-0.3);
       expect(negCoin).toEqual(DEFAULT_COIN_VALUE);
     });
+    test("Create a coin with more than 2 floating point values", () => {
+      const floatCoin = new Coin(0.345);
+      expect(floatCoin).toEqual({ value: 0.35 });
+    });
     test("Create a coin with a value greater than 2", () => {
       const dollar = new Coin(Coin.MAX_COIN_VALUE + 1);
       expect(dollar).toEqual(DEFAULT_COIN_VALUE);
