@@ -11,15 +11,15 @@ describe("Item tests", () => {
       expect(item1).toEqual({ name: "Coke", price: 2.35 });
     });
     test("Set an Item price to $1.50", () => {
-      item.setPrice(1.5);
+      expect(item.setPrice(1.5)).toEqual(true);
       expect(item.getPrice()).toEqual(1.5);
     });
     test("Set an Item name to 'Pepsi'", () => {
-      item.setName("Pepsi");
+      expect(item.setName("Pepsi")).toEqual(true);
       expect(item.getName()).toEqual("Pepsi");
     });
   });
-  describe("Unsuccessful Item Transactions", () => {
+  describe("Error Item Transactions", () => {
     test("Create an item with no arguments", () => {
       const item1 = new Item();
       expect(item1).toEqual({ name: "default", price: 0.0 });
@@ -33,11 +33,11 @@ describe("Item tests", () => {
       expect(item1).toEqual({ name: "Pepsi", price: 0.0 });
     });
     test("Set an item price to -5", () => {
-      item.setPrice(-5);
+      expect(item.setPrice(-5)).toEqual(false);
       expect(item.getPrice()).toEqual(0.0);
     });
     test("Set an Item name to the empty string", () => {
-      item.setName("");
+      expect(item.setName("")).toEqual(false);
       expect(item.getName()).toEqual("default");
     });
   });
