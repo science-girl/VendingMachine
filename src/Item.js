@@ -1,10 +1,13 @@
+const DEFAULT_ITEM_NAME = "default";
+const DEFAULT_ITEM_PRICE = 0.0;
+
 module.exports = class Item {
   // Constructor
   // @params string name is the item's name and double price is how much the item costs
   // @returns an item with given values otherwise default values for invalid inputs
   constructor(name, price) {
-    this.name = isValidName(name) ? name : "default";
-    this.price = isValidPrice(price) ? price : 0.0;
+    this.name = isValidName(name) ? name : DEFAULT_ITEM_NAME;
+    this.price = isValidPrice(price) ? price : DEFAULT_ITEM_PRICE;
   }
 
   // @params none
