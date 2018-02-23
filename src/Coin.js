@@ -1,4 +1,6 @@
 const DEFAULT_COIN_VALUE = 0.01;
+const MAX_COIN_VALUE = 2.0;
+
 module.exports = class Coin {
   // Constructor
   // @params a int or double value indicating how much a coin is worth
@@ -22,5 +24,6 @@ function isValidValue(value) {
   // - the value exists
   // - it is an int or double
   // - it is more than 0
-  return !(!value || Number.isNaN(value) || value < 0);
+  // - it is less than the max amt
+  return !(!value || isNaN(value) || value < 0 || value > MAX_COIN_VALUE);
 }
