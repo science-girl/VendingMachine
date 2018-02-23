@@ -12,6 +12,13 @@ describe("Coin tests", () => {
     test("Create a coin with a value of 0.05", () => {
       expect(coinWithValue).toEqual({ value: 0.05 });
     });
+    test("Get a coin value", () => {
+      expect(coinWithValue.getValue()).toEqual(0.05);
+    });
+    test("Set a coin value to 0.15", () => {
+      expect(coin.setValue(0.15)).toEqual(true);
+      expect(coin.getValue()).toEqual(0.15);
+    });
   });
 
   describe("Edge Case Coin Transactions", () => {
@@ -29,6 +36,13 @@ describe("Coin tests", () => {
     test("Create a coin with a non-numeric value", () => {
       const nonNumericCoin = new Coin("a");
       expect(nonNumericCoin).toEqual(DEFAULT_COIN_VALUE);
+    });
+    test("Get a coin value with no set value", () => {
+      expect(coin.getValue()).toEqual(0.01);
+    });
+    test("Set a coin value to a negative value", () => {
+      expect(coin.setValue(-0.15)).toEqual(false);
+      expect(coin.getValue()).toEqual(0.01);
     });
   });
 });

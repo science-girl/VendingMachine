@@ -1,4 +1,4 @@
-const DEFAULT_COIN_VALUE = 0.01;
+const MIN_COIN_VALUE = 0.01;
 const MAX_COIN_VALUE = 2.0;
 
 module.exports = class Coin {
@@ -7,13 +7,23 @@ module.exports = class Coin {
   // @returns a coin with the given value or a default of 0.01 if no value given
   constructor(value) {
     if (isValidValue(value)) this.value = value;
-    else this.value = DEFAULT_COIN_VALUE;
+    else this.value = MIN_COIN_VALUE;
   }
 
   // @params: none
   // @ returns: the value of the coin
   getValue() {
     return this.value;
+  }
+
+  // @params: value
+  // @returns: true if the value has been updated to the given amount and false otherwise
+  setValue(value) {
+    if (isValidValue(value)) {
+      this.value = value;
+      return true;
+    }
+    return false;
   }
 };
 
