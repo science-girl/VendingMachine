@@ -1,19 +1,19 @@
 const Coin = require("../src/Coin");
-const DEFAULT_COIN_VALUE = { value: 0.01 };
+const DEFAULT_COIN_VALUE = { value: 0.05 };
 
 describe("Coin tests", () => {
   let coin;
   let coinWithValue;
   beforeEach(() => {
     coin = new Coin();
-    coinWithValue = new Coin(0.05);
+    coinWithValue = new Coin(0.1);
   });
   describe("Successful Coin Transactions", () => {
-    test("Create a coin with a value of 0.05", () => {
-      expect(coinWithValue).toEqual({ value: 0.05 });
+    test("Create a coin with a value of 0.10", () => {
+      expect(coinWithValue).toEqual({ value: 0.1 });
     });
     test("Get a coin value", () => {
-      expect(coinWithValue.getValue()).toEqual(0.05);
+      expect(coinWithValue.getValue()).toEqual(0.1);
     });
     test("Set a coin value to 0.15", () => {
       expect(coin.setValue(0.15)).toEqual(true);
@@ -38,11 +38,11 @@ describe("Coin tests", () => {
       expect(nonNumericCoin).toEqual(DEFAULT_COIN_VALUE);
     });
     test("Get a coin value with no set value", () => {
-      expect(coin.getValue()).toEqual(0.01);
+      expect(coin.getValue()).toEqual(0.05);
     });
     test("Set a coin value to a negative value", () => {
       expect(coin.setValue(-0.15)).toEqual(false);
-      expect(coin.getValue()).toEqual(0.01);
+      expect(coin.getValue()).toEqual(0.05);
     });
   });
 });

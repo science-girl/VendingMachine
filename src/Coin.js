@@ -1,4 +1,4 @@
-const MIN_COIN_VALUE = 0.01;
+const MIN_COIN_VALUE = 0.05;
 const MAX_COIN_VALUE = 2.0;
 
 module.exports = class Coin {
