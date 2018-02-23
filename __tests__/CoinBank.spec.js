@@ -1,4 +1,28 @@
 const CoinBank = require("../src/CoinBank");
+const DEFAULT_BANK = {
+  bank: {
+    Dime: {
+      quantity: 0,
+      value: 0.1
+    },
+    Nickel: {
+      quantity: 0,
+      value: 0.05
+    },
+    OneDollar: {
+      quantity: 0,
+      value: 1
+    },
+    Quarter: {
+      quantity: 0,
+      value: 0.25
+    },
+    TwoDollars: {
+      quantity: 0,
+      value: 2
+    }
+  }
+};
 
 describe("CoinBank tests", () => {
   let bank;
@@ -7,7 +31,11 @@ describe("CoinBank tests", () => {
     bank = new CoinBank();
   });
   describe("Successful CoinBank Transactions", () => {
-    test("Create a bank with equal balance for each denomination", () => {
+    test("Create an empty bank", () => {
+      expect(bank).toEqual(DEFAULT_BANK);
+    });
+    // TODO: once CoinBank accepts an array
+    test("Create a bank with equal balance for the default denominations", () => {
       expect().toEqual();
     });
     test("Get bank balance with funds available", () => {
@@ -46,9 +74,6 @@ describe("CoinBank tests", () => {
   });
 
   describe("Edge Case CoinBank Transactions", () => {
-    test("Create an empty bank", () => {
-      expect().toEqual();
-    });
     test("Get bank balance with no funds available", () => {
       expect().toEqual();
     });
@@ -56,6 +81,9 @@ describe("CoinBank tests", () => {
       expect().toEqual();
     });
     test("Deposit a negative amount", () => {
+      expect().toEqual();
+    });
+    test("Withdraw a coin denomination that doesn't exist in the CoinBank", () => {
       expect().toEqual();
     });
     test("Withdraw 5 two dollar coins with no funds available", () => {
