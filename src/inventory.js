@@ -1,4 +1,5 @@
 const Item = require("./Item");
+const DEFAULT_QUANTITY_VALUE = 0;
 
 module.exports = class Inventory {
   // Constructor
@@ -11,7 +12,7 @@ module.exports = class Inventory {
       arrayOfItems.map(item => {
         let newInventoryEntry = {};
         newInventoryEntry["item"] = item;
-        newInventoryEntry["quantity"] = 0;
+        newInventoryEntry["quantity"] = DEFAULT_QUANTITY_VALUE;
         this.inventory[item.name] = newInventoryEntry;
       });
     }
@@ -22,7 +23,9 @@ module.exports = class Inventory {
   addEntry(item, quantity) {
     if (!(item.name in this.inventory)) {
       this.inventory[item.name] = item;
-      this.inventory["quantity"] = isValidQuantity(quantity) ? quantity : 0;
+      this.inventory["quantity"] = isValidQuantity(quantity)
+        ? quantity
+        : DEFAULT_QUANTITY_VALUE;
       return true;
     }
     return false;
