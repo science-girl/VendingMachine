@@ -5,16 +5,32 @@ const MIN_COIN_VALUE = 0.05;
 module.exports = class Coin {
   // Constructor
   // @params a int or double value indicating how much a coin is worth
-  // @returns a coin with the given value or a default of 0.01 if no value given
-  constructor(value) {
-    if (isValidValue(value)) this.value = toFloatingPoint(value);
-    else this.value = MIN_COIN_VALUE;
+  // @returns a coin with the given value or a default if no value given
+  constructor(value, quantity) {
+    this.value = isValidValue(value) ? toFloatingPoint(value) : MIN_COIN_VALUE;
+    this.quantity = isValidQuantity(quantity) ? quantity : 0;
   }
 
   // @params: none
   // @ returns: the value of the coin
   getValue() {
     return this.value;
+  }
+
+  // @params: none
+  // @returns: the number of coins
+  getQuantity() {
+    return this.quantity;
+  }
+
+  // @params: integer quantity
+  // @returns: true if the quantity was updated and false otherwise
+  setQuantity(quantity) {
+    if (isValidQuantity(quantity)) {
+      this.quantity = quantity;
+      return true;
+    }
+    return false;
   }
 
   // @params: value
@@ -37,6 +53,16 @@ function isValidValue(value) {
   // - it is more than 0
   // - it is less than the max amt
   return !(!value || isNaN(value) || value < 0 || value > MAX_COIN_VALUE);
+}
+
+// @params integer quantity
+// @returns true if quantity is a valid input and false otherwise
+function isValidQuantity(quantity) {
+  // a valid quantity:
+  // - must exist
+  // - be a positive integer
+  // - be an integer
+  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
 }
 
 // @params: value to change to a 2 point floating number
