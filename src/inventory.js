@@ -18,33 +18,46 @@ module.exports = class Inventory {
   }
 
   // @params Entry of an Item item and possible integer quantity to add to inventory
-  // @returns none
+  // @returns true if added and false otherwise
   addEntry(item, quantity) {
-    this.inventory[item.name] = item;
-    this.inventory["quantity"] = isValidQuantity(quantity) ? quantity : 0;
+    if (!(item.name in this.inventory)) {
+      this.inventory[item.name] = item;
+      this.inventory["quantity"] = isValidQuantity(quantity) ? quantity : 0;
+      return true;
+    }
+    return false;
   }
 
   // @params Name of Entry to remove
-  // @returns none
+  // @returns true if item was removed and false otherwise
   removeEntry(itemName) {
-    delete this.inventory[itemName];
+    if (itemName in this.inventory) {
+      delete this.inventory[itemName];
+      return true;
+    }
+    return false;
   }
 
   // @params Name of Entry to update and new price
   // @returns true if the price was updated for the item and false otherwise
   updatePrice(itemName, newPrice) {
-    const item = this.inventory[itemName].item;
-    return item.setPrice(newPrice);
+    if (this.isItemInInventory(itemName)) {
+      const item = this.inventory[itemName].item;
+      return item.setPrice(newPrice);
+    }
+    return false;
   }
 
   // @params string itemName of Entry to update and string newName
   // @returns true if the update occurred and false otherwise
   updateName(itemName, newName) {
-    const item = this.inventory[itemName].item;
-    if (item.setName(newName)) {
-      this.inventory[item.getName()] = this.inventory[itemName];
-      delete this.inventory[itemName];
-      return true;
+    if (this.isItemInInventory(itemName)) {
+      const item = this.inventory[itemName].item;
+      if (item.setName(newName)) {
+        this.inventory[item.getName()] = this.inventory[itemName];
+        delete this.inventory[itemName];
+        return true;
+      }
     }
     return false;
   }
@@ -52,8 +65,25 @@ module.exports = class Inventory {
   // @params string itemName to increase and integer quantity
   // @returns returns true if quantity was increased and false if the quanity wasn't increased
   increaseQuantity(itemName, quantity) {
-    if (isValidQuantity(quantity)) {
-      this.inventory[itemName].quantity = quantity;
+    if (isValidQuantity(quantity) && this.isItemInInventory(itemName)) {
+      this.inventory[itemName].quantity =
+        this.inventory[itemName].quantity + quantity;
+      return true;
+    }
+    // else no change since the quantity given isn't valid
+    return false;
+  }
+
+  // @params string itemName to decrease and integer quantity
+  // @returns returns true if quantity was decreased and false if the quanity wasn't increased
+  decreaseQuantity(itemName, quantity) {
+    if (
+      isValidQuantity(quantity) &&
+      this.isItemInInventory(itemName) &&
+      this.inventory[itemName].quantity > quantity
+    ) {
+      this.inventory[itemName].quantity =
+        this.inventory[itemName].quantity - quantity;
       return true;
     }
     // else no change since the quantity given isn't valid
@@ -64,6 +94,21 @@ module.exports = class Inventory {
   // @returns the inventory
   getInventory() {
     return this.inventory;
+  }
+
+  // @params string itemName of the item to retrive
+  // @returns the Item corresponding to the given Name and false if the item does not exist
+  getItem(itemName) {
+    if (this.isItemInInventory(itemName)) {
+      return this.inventory[itemName].item;
+    }
+    return false;
+  }
+
+  // @params string itemName to check exists in inventory
+  // @returns true if the item exists and false otherwise
+  isItemInInventory(itemName) {
+    return itemName in this.inventory;
   }
 };
 

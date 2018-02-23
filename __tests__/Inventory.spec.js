@@ -1,6 +1,17 @@
 const Inventory = require("../src/Inventory");
 const Item = require("../src/Item");
 
+const unchangedInventoryWithItems = {
+  Coke: { item: { name: "Coke", price: 1.45 }, quantity: 0 },
+  Pepsi: {
+    item: {
+      name: "Pepsi",
+      price: 2.5
+    },
+    quantity: 0
+  }
+};
+
 describe("Iventory tests", () => {
   let inventory;
   let inventoryWithItems;
@@ -45,14 +56,14 @@ describe("Iventory tests", () => {
       });
     });
     test("Add an item to inventory with quantity defined", () => {
-      inventory.addEntry(item1, 5);
+      expect(inventory.addEntry(item1, 5)).toEqual(true);
       expect(inventory.getInventory()).toEqual({
         Pepsi: { name: "Pepsi", price: 2.5 },
         quantity: 5
       });
     });
     test("Remove an item from inventory", () => {
-      inventoryWithItems.removeEntry("Coke");
+      expect(inventoryWithItems.removeEntry("Coke")).toEqual(true);
       expect(inventoryWithItems.getInventory()).toEqual({
         Pepsi: {
           item: {
@@ -115,33 +126,12 @@ describe("Iventory tests", () => {
       });
     });
     test("Get a particular item in inventory", () => {
-      expect().toEqual();
+      const item = inventoryWithItems.getItem("Pepsi");
+      expect(item).toEqual(item1);
     });
     test("Decrease the quantity of an item in inventory", () => {
-      expect().toEqual();
-    });
-  });
-  describe("Edge Case Inventory Transactions", () => {
-    test("Add an item to inventory that already exists", () => {
-      expect().toEqual();
-    });
-    test("Remove an item from inventory that doesn't exist", () => {
-      expect().toEqual();
-    });
-    test("Remove an item from an inventory of 0", () => {
-      expect().toEqual();
-    });
-    test("Decrease an item quantity with quantity of 0 in inventory", () => {
-      expect().toEqual();
-    });
-    test("Add an item quantity with quantity of 0 in inventory", () => {
-      expect().toEqual();
-    });
-    test("Add an item quantity for an item that doesn't exist in inventory", () => {
-      expect().toEqual();
-    });
-    test("Adjust the price of an item in inventory to -1.05", () => {
-      expect(inventoryWithItems.updatePrice("Pepsi", -1.05)).toEqual(false);
+      expect(inventoryWithItems.increaseQuantity("Pepsi", 3)).toEqual(true);
+      expect(inventoryWithItems.decreaseQuantity("Pepsi", 2)).toEqual(true);
       expect(inventoryWithItems.getInventory()).toEqual({
         Coke: { item: { name: "Coke", price: 1.45 }, quantity: 0 },
         Pepsi: {
@@ -149,9 +139,69 @@ describe("Iventory tests", () => {
             name: "Pepsi",
             price: 2.5
           },
-          quantity: 0
+          quantity: 1
         }
       });
+    });
+  });
+  describe("Edge Case Inventory Transactions", () => {
+    test("Add an item to inventory that already exists", () => {
+      expect(inventoryWithItems.addEntry(item1)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Remove an item that does not exist from inventory", () => {
+      expect(inventory.removeEntry("Pepsi")).toEqual(false);
+      expect(inventory.getInventory()).toEqual({});
+    });
+    test("Update the price of an item that does not exist in inventory", () => {
+      expect(inventoryWithItems.updatePrice("Zima", 2.59)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Update an item name that does not exist in inventory", () => {
+      expect(inventoryWithItems.updateName("Zima")).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Decrease an item quantity with a negative quantity", () => {
+      expect(inventoryWithItems.decreaseQuantity("Pepsi", -6)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Decrease an item quantity with a float quantity", () => {
+      expect(inventoryWithItems.decreaseQuantity("Pepsi", 6.5)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Decrease an item quantity with quantity of 0 in inventory", () => {
+      expect(inventoryWithItems.decreaseQuantity("Pepsi", 6)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Decrease an item quantity for an item that doesn't exist in inventory", () => {
+      expect(inventoryWithItems.decreaseQuantity("Zima", 2)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Increase an item quantity for an item that doesn't exist in inventory", () => {
+      expect(inventoryWithItems.increaseQuantity("Zima", 2)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
+    });
+    test("Adjust the price of an item in inventory to -1.05", () => {
+      expect(inventoryWithItems.updatePrice("Pepsi", -1.05)).toEqual(false);
+      expect(inventoryWithItems.getInventory()).toEqual(
+        unchangedInventoryWithItems
+      );
     });
   });
 });
