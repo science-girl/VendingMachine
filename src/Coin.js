@@ -33,6 +33,26 @@ module.exports = class Coin {
     return false;
   }
 
+  // @params: integer quantity
+  // @returns: true if the quantity was increased and false otherwise
+  increaseQuantity(quantity) {
+    if (isValidQuantity(quantity)) {
+      this.quantity = this.quantity + quantity;
+      return true;
+    }
+    return false;
+  }
+
+  // @params: integer quantity
+  // @returns: true if the quantity was decreased and false otherwise
+  decreaseQuantity(quantity) {
+    if (isValidQuantity(quantity) && quantity <= this.quantity) {
+      this.quantity = this.quantity - quantity;
+      return true;
+    }
+    return false;
+  }
+
   // @params: value
   // @returns: true if the value has been updated to the given amount and false otherwise
   setValue(value) {

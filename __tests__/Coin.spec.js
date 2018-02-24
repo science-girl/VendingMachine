@@ -31,6 +31,16 @@ describe("Coin tests", () => {
       expect(coin.setQuantity(15)).toEqual(true);
       expect(coin.getQuantity()).toEqual(15);
     });
+    test("Increase a non-zero coin quantity by 5", () => {
+      expect(coin.setQuantity(15)).toEqual(true);
+      expect(coin.increaseQuantity(5)).toEqual(true);
+      expect(coin.getQuantity()).toEqual(20);
+    });
+    test("Decrease a non-zero coin quantity by 5", () => {
+      expect(coin.setQuantity(15)).toEqual(true);
+      expect(coin.decreaseQuantity(5)).toEqual(true);
+      expect(coin.getQuantity()).toEqual(10);
+    });
   });
 
   describe("Edge Case Coin Transactions", () => {
@@ -59,6 +69,10 @@ describe("Coin tests", () => {
     test("Set a coin value to a negative value", () => {
       expect(coin.setValue(-0.15)).toEqual(false);
       expect(coin.getValue()).toEqual(0.05);
+    });
+    test("Decrease a coin with 0 quantity by 5", () => {
+      expect(coin.decreaseQuantity(5)).toEqual(false);
+      expect(coin.getQuantity()).toEqual(0);
     });
     test("Get a coin quantity with no set value", () => {
       expect(coin.getQuantity()).toEqual(0);
