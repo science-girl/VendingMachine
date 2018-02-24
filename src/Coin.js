@@ -12,7 +12,7 @@ module.exports = class Coin {
   }
 
   // @params: none
-  // @ returns: the value of the coin
+  // @returns: the value of the coin
   getValue() {
     return this.value;
   }
