@@ -95,14 +95,20 @@ module.exports = class Inventory {
     return false;
   }
 
-  // @params none
-  // @returns the inventory
+  // @params: none
+  // @returns: the inventory
   getInventory() {
     return this.inventory;
   }
 
-  // @params string itemName of the item to retrive
-  // @returns the Item corresponding to the given Name and false if the item does not exist
+  // @params: string itemName
+  // @returns: true if the item quantity is 0 and false otherwise
+  isEmpty(itemName) {
+    return !this.inventory[itemName].quantity;
+  }
+
+  // @params: string itemName of the item to retrive
+  // @returns: the Item corresponding to the given Name and false if the item does not exist
   getItem(itemName) {
     if (this.isItemInInventory(itemName)) {
       return this.inventory[itemName].item;

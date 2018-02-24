@@ -129,6 +129,13 @@ describe("Iventory tests", () => {
       const item = inventoryWithItems.getItem("Pepsi");
       expect(item).toEqual(item1);
     });
+    test("Test if an item with quantity 0 in inventory is empty", () => {
+      expect(inventoryWithItems.isEmpty("Pepsi")).toEqual(true);
+    });
+    test("Test if an item with quantity not 0 in inventory is empty", () => {
+      expect(inventoryWithItems.increaseQuantity("Pepsi", 3)).toEqual(true);
+      expect(inventoryWithItems.isEmpty("Pepsi")).toEqual(false);
+    });
     test("Decrease the quantity of an item in inventory", () => {
       expect(inventoryWithItems.increaseQuantity("Pepsi", 3)).toEqual(true);
       expect(inventoryWithItems.decreaseQuantity("Pepsi", 2)).toEqual(true);
