@@ -1,114 +1,129 @@
-const CDNCoinBank = require("../src/CDNCoinBank");
+const CDNCoinBank = require('../src/CDNCoinBank');
 //
 // NOTE: These tests only cover methods specific to CDNCoinBank, as
 // CoinBank.spec.js uses as its test data the values for the CDNCoinBank
 //
-describe("Canadian CoinBank tests", () => {
+describe('Canadian CoinBank tests', () => {
   let bank;
 
   beforeEach(() => {
     bank = new CDNCoinBank();
   });
-  describe("Successful Canadian CoinBank Transactions", () => {
-    test("Increase Two Dollar Coins", () => {
+  describe('Successful Canadian CoinBank Transactions', () => {
+    test('Increase Two Dollar Coins', () => {
       expect(bank.increaseTwoDollarCoins(4)).toEqual(true);
     });
-    test("Increase One Dollar Coins", () => {
+    test('Increase One Dollar Coins', () => {
       expect(bank.increaseOneDollarCoins(4)).toEqual(true);
     });
-    test("Increase Quarters", () => {
+    test('Increase Quarters', () => {
       expect(bank.increaseQuarters(4)).toEqual(true);
     });
-    test("Increase Dimes", () => {
+    test('Increase Dimes', () => {
       expect(bank.increaseDimes(4)).toEqual(true);
     });
-    test("Increase Nickels", () => {
+    test('Increase Nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
     });
-    test("Decrease Two Dollar Coins", () => {
+    test('Decrease Two Dollar Coins', () => {
       expect(bank.increaseTwoDollarCoins(4)).toEqual(true);
       expect(bank.decreaseTwoDollarCoins(3)).toEqual(true);
     });
-    test("Decrease One Dollar Coins", () => {
+    test('Decrease One Dollar Coins', () => {
       expect(bank.increaseOneDollarCoins(4)).toEqual(true);
       expect(bank.decreaseOneDollarCoins(3)).toEqual(true);
     });
-    test("Decrease Quarters", () => {
+    test('Decrease Quarters', () => {
       expect(bank.increaseQuarters(4)).toEqual(true);
       expect(bank.decreaseQuarters(3)).toEqual(true);
     });
-    test("Decrease Dimes", () => {
+    test('Decrease Dimes', () => {
       expect(bank.increaseDimes(4)).toEqual(true);
       expect(bank.decreaseDimes(3)).toEqual(true);
     });
-    test("Decrease Nickels", () => {
+    test('Decrease Nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.decreaseNickels(3)).toEqual(true);
     });
-    test("Get number of two dollar coins", () => {
+    test('Get number of two dollar coins', () => {
       expect(bank.increaseTwoDollarCoins(4)).toEqual(true);
       expect(bank.getNumberOfTwoDollarCoins()).toEqual(4);
     });
-    test("Get number of one dollar coins", () => {
+    test('Get number of one dollar coins', () => {
       expect(bank.increaseOneDollarCoins(4)).toEqual(true);
       expect(bank.getNumberOfOneDollarCoins()).toEqual(4);
     });
-    test("Get number of quarters", () => {
+    test('Get number of quarters', () => {
       expect(bank.increaseQuarters(4)).toEqual(true);
       expect(bank.getNumberOfQuarterCoins()).toEqual(4);
     });
-    test("Get number of dimes", () => {
+    test('Get number of dimes', () => {
       expect(bank.increaseDimes(4)).toEqual(true);
       expect(bank.getNumberOfDimeCoins()).toEqual(4);
     });
-    test("Get number of nickels", () => {
+    test('Get number of nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.getNumberOfNickelCoins()).toEqual(4);
     });
 
-    test("Get balance of two dollar coins", () => {
+    test('Get balance of two dollar coins', () => {
       expect(bank.increaseTwoDollarCoins(4)).toEqual(true);
       expect(bank.getTwoDollarBalance()).toEqual(8);
     });
-    test("Get balance of one dollar coins", () => {
+    test('Get balance of one dollar coins', () => {
       expect(bank.increaseOneDollarCoins(4)).toEqual(true);
       expect(bank.getOneDollarBalance()).toEqual(4);
     });
-    test("Get balance of quarters", () => {
+    test('Get balance of quarters', () => {
       expect(bank.increaseQuarters(4)).toEqual(true);
       expect(bank.getQuarterBalance()).toEqual(1);
     });
-    test("Get balance of dimes", () => {
+    test('Get balance of dimes', () => {
       expect(bank.increaseDimes(4)).toEqual(true);
       expect(bank.getDimeBalance()).toEqual(0.4);
     });
-    test("Get balance of nickels", () => {
+    test('Get balance of nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.getNickelBalance()).toEqual(0.2);
     });
   });
 
-  describe("Edge Case Canadian CoinBank Transactions", () => {
-    test("Get bank balance with no funds available", () => {
-      expect().toEqual();
+  describe('Edge Case Canadian CoinBank Transactions', () => {
+    test('Get bank balance with no funds available', () => {
+      expect(bank.getBalance()).toEqual(0);
     });
-    test("Decrease Two Dollar Coins", () => {
+    test('Increase Two Dollar Coins with invalid input', () => {
+      expect(bank.increaseTwoDollarCoins(-4)).toEqual(false);
+    });
+    test('Increase One Dollar Coins with invalid input', () => {
+      expect(bank.increaseOneDollarCoins('b')).toEqual(false);
+    });
+    test('Increase Quarters with invalid input', () => {
+      expect(bank.increaseQuarters(4.5)).toEqual(false);
+    });
+    test('Increase Dimes', () => {
+      expect(bank.increaseDimes(-2.3)).toEqual(false);
+    });
+    test('Increase Nickels', () => {
+      expect(bank.increaseNickels()).toEqual(false);
+    });
+    test('Decrease Two Dollar Coins', () => {
       expect(bank.increaseTwoDollarCoins(4)).toEqual(true);
       expect(bank.decreaseTwoDollarCoins(5)).toEqual(false);
     });
-    test("Decrease One Dollar Coins", () => {
+    test('Decrease One Dollar Coins', () => {
       expect(bank.increaseOneDollarCoins(4)).toEqual(true);
       expect(bank.decreaseOneDollarCoins(5)).toEqual(false);
     });
-    test("Decrease Quarters", () => {
+    test('Decrease Quarters', () => {
       expect(bank.increaseQuarters(4)).toEqual(true);
       expect(bank.decreaseQuarters(5)).toEqual(false);
     });
-    test("Decrease Dimes", () => {
+    test('Decrease Dimes', () => {
       expect(bank.increaseDimes(4)).toEqual(true);
       expect(bank.decreaseDimes(5)).toEqual(false);
     });
-    test("Decrease Nickels", () => {
+    test('Decrease Nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.decreaseNickels(5)).toEqual(false);
     });

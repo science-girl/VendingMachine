@@ -1,4 +1,4 @@
-const Coin = require("./Coin");
+const Coin = require('./Coin');
 
 // Constants
 const DEFAULT_COIN_QUANTITY = 0;
@@ -11,11 +11,8 @@ module.exports = class CoinBank {
   constructor(array) {
     this.bank = {};
     if (array) {
-      array.forEach(denomination => {
-        this.bank[denomination.name] = new Coin(
-          denomination.value,
-          DEFAULT_COIN_QUANTITY
-        );
+      array.forEach((denomination) => {
+        this.bank[denomination.name] = new Coin(denomination.value, DEFAULT_COIN_QUANTITY);
       });
     }
   }
@@ -66,11 +63,10 @@ module.exports = class CoinBank {
   // @params: none
   // @returns: the total balance of the coin bank
   getBalance() {
-    return Object.keys(this.bank).reduce((result, coin2) => {
-      return (
-        this.bank[coin2].getValue() * this.bank[coin2].getQuantity() + result
-      );
-    }, 0);
+    return Object.keys(this.bank).reduce(
+      (result, coin2) => (this.bank[coin2].getValue() * this.bank[coin2].getQuantity()) + result,
+      0,
+    );
   }
 
   // @params string coinName to check exists in bank

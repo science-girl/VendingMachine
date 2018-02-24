@@ -49,12 +49,8 @@ describe("CoinBank tests", () => {
     test("Create an empty bank", () => {
       expect(bank).toEqual(DEFAULT_BANK);
     });
-    // TODO: once CoinBank accepts an array
-    test("Create a bank with equal balance for the default denominations", () => {
-      expect().toEqual();
-    });
-    test("Get bank balance with funds available", () => {
-      expect().toEqual();
+    test("Is coin in inventory for coin that exists", () => {
+      expect(bank.isCoinInBank(TWO_DOLLAR_ACCESSOR)).toEqual(true);
     });
     test("Get coin balance with funds available", () => {
       expect(bank.depositCoin(TWO_DOLLAR_ACCESSOR, 4)).toEqual(true);
@@ -114,6 +110,9 @@ describe("CoinBank tests", () => {
   describe("Edge Case CoinBank Transactions", () => {
     test("Get bank balance with no funds available", () => {
       expect(bank.getBalance()).toEqual(0);
+    });
+    test("Is coin in inventory for coin that does not exist", () => {
+      expect(bank.isCoinInBank("NotACoin")).toEqual(false);
     });
     test("Deposit a coin denomination that doesn't exist in the CoinBank", () => {
       expect(bank.depositCoin("NotACoin", 5)).toEqual(false);

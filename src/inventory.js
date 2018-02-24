@@ -1,7 +1,22 @@
-const Item = require("./Item");
 const DEFAULT_QUANTITY_VALUE = 0;
-const ITEM_ACCESSOR = "item";
-const QUANTITY_ACCESSOR = "quantity";
+const ITEM_ACCESSOR = 'item';
+const QUANTITY_ACCESSOR = 'quantity';
+
+// @params integer quantity
+// @returns true if quantity is a valid input and false otherwise
+function isValidQuantity(quantity) {
+  // a valid quantity:
+  // - must exist
+  // - be a positive integer
+  // - be an integer
+  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
+}
+
+// @params string name
+// @returns true if name a valid input
+function isValidName(name) {
+  return !(!name || name === '');
+}
 
 module.exports = class Inventory {
   // Constructor
@@ -11,20 +26,22 @@ module.exports = class Inventory {
     // {<item.name>: {item: <item>, quantity: <quantity>}, ...}
     this.inventory = {};
     if (arrayOfItems) {
-      arrayOfItems.map(item => {
-        let newInventoryEntry = {};
-        newInventoryEntry[ITEM_ACCESSOR] = item;
+      arrayOfItems.map((item) => {
+        const key = Object.keys(item)[0];
+        const newInventoryEntry = {};
+        newInventoryEntry[ITEM_ACCESSOR] = item[key];
         newInventoryEntry[QUANTITY_ACCESSOR] = DEFAULT_QUANTITY_VALUE;
-        this.inventory[item.name] = newInventoryEntry;
+        this.inventory[key] = newInventoryEntry;
+        return this.inventory[key];
       });
     }
   }
 
-  // @params Entry of an Item item and possible integer quantity to add to inventory
+  // @params string entryName, an Item item and possible integer quantity to add to inventory
   // @returns true if added and false otherwise
-  addEntry(item, quantity) {
-    if (!(item.name in this.inventory)) {
-      this.inventory[item.name] = item;
+  addEntry(entryName, item, quantity) {
+    if (!(entryName in this.inventory) && isValidName(entryName)) {
+      this.inventory[entryName] = item;
       this.inventory[QUANTITY_ACCESSOR] = isValidQuantity(quantity)
         ? quantity
         : DEFAULT_QUANTITY_VALUE;
@@ -47,8 +64,7 @@ module.exports = class Inventory {
   // @returns true if the price was updated for the item and false otherwise
   updatePrice(itemName, newPrice) {
     if (this.isItemInInventory(itemName)) {
-      const item = this.inventory[itemName].item;
-      return item.setPrice(newPrice);
+      return this.inventory[itemName].item.setPrice(newPrice);
     }
     return false;
   }
@@ -57,12 +73,9 @@ module.exports = class Inventory {
   // @returns true if the update occurred and false otherwise
   updateName(itemName, newName) {
     if (this.isItemInInventory(itemName)) {
-      const item = this.inventory[itemName].item;
-      if (item.setName(newName)) {
-        this.inventory[item.getName()] = this.inventory[itemName];
-        delete this.inventory[itemName];
-        return true;
-      }
+      this.inventory[newName] = this.inventory[itemName];
+      delete this.inventory[itemName];
+      return true;
     }
     return false;
   }
@@ -71,8 +84,7 @@ module.exports = class Inventory {
   // @returns returns true if quantity was increased and false if the quanity wasn't increased
   increaseQuantity(itemName, quantity) {
     if (isValidQuantity(quantity) && this.isItemInInventory(itemName)) {
-      this.inventory[itemName].quantity =
-        this.inventory[itemName].quantity + quantity;
+      this.inventory[itemName].quantity = this.inventory[itemName].quantity + quantity;
       return true;
     }
     // else no change since the quantity given isn't valid
@@ -87,8 +99,7 @@ module.exports = class Inventory {
       this.isItemInInventory(itemName) &&
       this.inventory[itemName].quantity > quantity
     ) {
-      this.inventory[itemName].quantity =
-        this.inventory[itemName].quantity - quantity;
+      this.inventory[itemName].quantity = this.inventory[itemName].quantity - quantity;
       return true;
     }
     // else no change since the quantity given isn't valid
@@ -122,13 +133,3 @@ module.exports = class Inventory {
     return itemName in this.inventory;
   }
 };
-
-// @params integer quantity
-// @returns true if quantity is a valid input and false otherwise
-function isValidQuantity(quantity) {
-  // a valid quantity:
-  // - must exist
-  // - be a positive integer
-  // - be an integer
-  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
-}
