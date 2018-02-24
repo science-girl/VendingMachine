@@ -2,6 +2,33 @@
 const MAX_COIN_VALUE = 2.0;
 const MIN_COIN_VALUE = 0.05;
 
+// @params: value to validate
+// @returns: true if this value is valid and false otherwise
+function isValidValue(value) {
+  // a coin is valid if:
+  // - the value exists
+  // - it is an int or double
+  // - it is more than 0
+  // - it is less than the max amt
+  return !(!value || Number.isNaN(parseFloat(value)) || value < 0 || value > MAX_COIN_VALUE);
+}
+
+// @params integer quantity
+// @returns true if quantity is a valid input and false otherwise
+function isValidQuantity(quantity) {
+  // a valid quantity:
+  // - must exist
+  // - be a positive integer
+  // - be an integer
+  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
+}
+
+// @params: value to change to a 2 point floating number
+// @returns a 2 point floating number of the given value
+function toFloatingPoint(value) {
+  return Math.round(value * 100) / 100;
+}
+
 module.exports = class Coin {
   // Constructor
   // @params a int or double value indicating how much a coin is worth
@@ -63,30 +90,3 @@ module.exports = class Coin {
     return false;
   }
 };
-
-// @params: value to validate
-// @returns: true if this value is valid and false otherwise
-function isValidValue(value) {
-  // a coin is valid if:
-  // - the value exists
-  // - it is an int or double
-  // - it is more than 0
-  // - it is less than the max amt
-  return !(!value || isNaN(value) || value < 0 || value > MAX_COIN_VALUE);
-}
-
-// @params integer quantity
-// @returns true if quantity is a valid input and false otherwise
-function isValidQuantity(quantity) {
-  // a valid quantity:
-  // - must exist
-  // - be a positive integer
-  // - be an integer
-  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
-}
-
-// @params: value to change to a 2 point floating number
-// @returns a 2 point floating number of the given value
-function toFloatingPoint(value) {
-  return Math.round(value * 100) / 100;
-}
