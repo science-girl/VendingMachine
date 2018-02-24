@@ -65,7 +65,13 @@ module.exports = class CoinBank {
 
   // @params: none
   // @returns: the total balance of the coin bank
-  getBalance() {}
+  getBalance() {
+    return Object.keys(this.bank).reduce((result, coin2) => {
+      return (
+        this.bank[coin2].getValue() * this.bank[coin2].getQuantity() + result
+      );
+    }, 0);
+  }
 
   // @params string coinName to check exists in bank
   // @returns true if the coin exists and false otherwise

@@ -64,6 +64,11 @@ describe("CoinBank tests", () => {
       expect(bank.depositCoin(TWO_DOLLAR_ACCESSOR, 4)).toEqual(true);
       expect(bank.getCoinNumber(TWO_DOLLAR_ACCESSOR)).toEqual(4);
     });
+    test("Get bank balance with funds available", () => {
+      expect(bank.depositCoin(QUARTER_ACCESSOR, 4)).toEqual(true);
+      expect(bank.depositCoin(ONE_DOLLAR_ACCESSOR, 4)).toEqual(true);
+      expect(bank.getBalance()).toEqual(5);
+    });
     test("Deposit 5 two dollar coins", () => {
       expect(bank.depositCoin(TWO_DOLLAR_ACCESSOR, 5)).toEqual(true);
     });
@@ -108,7 +113,7 @@ describe("CoinBank tests", () => {
 
   describe("Edge Case CoinBank Transactions", () => {
     test("Get bank balance with no funds available", () => {
-      expect().toEqual();
+      expect(bank.getBalance()).toEqual(0);
     });
     test("Deposit a coin denomination that doesn't exist in the CoinBank", () => {
       expect(bank.depositCoin("NotACoin", 5)).toEqual(false);
