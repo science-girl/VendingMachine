@@ -43,6 +43,7 @@ describe('Vending Machine tests', () => {
         { name: 'Toblerone', price: 4.25 },
         [],
       ]);
+      expect(purchaseVendingMachine.getItemStock('C', 1)).toEqual(2);
     });
     test('Purchase an item with inexact change (more than required) ie. $5.25 for $4.25 item', () => {
       expect(purchaseVendingMachine.stockChangeMachine(coinArray)).toEqual(true);
@@ -120,12 +121,12 @@ describe('Vending Machine tests', () => {
       ]);
       expect(purchaseVendingMachine.getItemStock('A', 1)).toEqual(0);
     });
-    test('Purchase an item with inexact change when not enough return change exists', () => {
-      // expect(emptyVendingMachine.stockChangeMachine([new Coin(0.25, 1)])).toEqual(true);
-      // expect(emptyVendingMachine.restockItem('A', 1, 5)).toEqual(true);
-      // const payment = [new Coin(1, 1), new Coin(0.25, 2)];
-      // expect(emptyVendingMachine.purchaseItem('A', 1, payment)).toEqual(false);
-    });
+    // test('Purchase an item with inexact change when not enough return change exists', () => {
+    //   expect(purchaseVendingMachine.stockChangeMachine([new Coin(0.25, 1)])).toEqual(true);
+    //   expect(purchaseVendingMachine.restockItem('A', 1, 5)).toEqual(true);
+    //   const payment = [new Coin(1, 1), new Coin(0.25, 2)];
+    //   expect(purchaseVendingMachine.purchaseItem('A', 1, payment)).toEqual(false);
+    // });
     test('Check if change machine can be refilled', () => {
       expect(vendingMachine.canRefillCoins(largeCoinArray)).toEqual(false);
     });

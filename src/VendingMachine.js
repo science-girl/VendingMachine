@@ -76,7 +76,7 @@ module.exports = class VendingMachine {
         const change = this.changeMachine.getChange(payment - itemPrice);
         // decrement item
         const item = this.vendingInventory.getItem(rowName, itemIndex);
-        console.log(this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1));
+        this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
 
         return [item, change];
       }
