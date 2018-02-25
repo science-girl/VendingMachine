@@ -1,4 +1,5 @@
 const CoinBank = require('./CoinBank');
+const Coin = require('./Coin');
 
 const DENOMINATIONS = [
   { name: 'TwoDollars', value: 2.0 },
@@ -129,16 +130,37 @@ module.exports = class CDNCoinBank {
     return this.coinBank.getCoinBalance(DENOMINATIONS[4].name);
   }
 
-  // @params: none
-  // @returns: the denomination scheme this coin bank adheres to
-  getDenominations() {
-    return DENOMINATIONS;
+  // @params: Coin coin
+  // @returns: true if the coin was withdrawn and false otherwise
+  withdraw(coin) {
+    const denominations = DENOMINATIONS;
+    let successfulWithrawl;
+    switch (coin.getValue()) {
+      case denominations[0].value:
+        successfulWithrawl = this.decreaseTwoDollarCoins(coin.getQuantity());
+        break;
+      case denominations[1].value:
+        successfulWithrawl = this.decreaseOneDollarCoins(coin.getQuantity());
+        break;
+      case denominations[2].value:
+        successfulWithrawl = this.decreaseQuarters(coin.getQuantity());
+        break;
+      case denominations[3].value:
+        successfulWithrawl = this.decreaseDimes(coin.getQuantity());
+        break;
+      case denominations[4].value:
+        successfulWithrawl = this.decreaseNickels(coin.getQuantity());
+        break;
+      default:
+        successfulWithrawl = false;
+    }
+    return successfulWithrawl;
   }
 
   // @params: Coin coin
   // @returns: true if the coin was deposited and false otherwise
   deposit(coin) {
-    const denominations = DENOMINATIONS; // this.changeMachine.getDenominations();
+    const denominations = DENOMINATIONS;
     let successfulDeposit;
     switch (coin.getValue()) {
       case denominations[0].value:
@@ -160,6 +182,31 @@ module.exports = class CDNCoinBank {
         successfulDeposit = false;
     }
     return successfulDeposit;
+  }
+
+  // @params: float changeRequired
+  // @returns: a coinArray of the changeRequired and false if the bank cannot cover the amount
+  getChange(changeRequired) {
+    let change = changeRequired * 100;
+    // check if change requested can be given:
+    if (this.getBalance() < changeRequired) return false;
+
+    const changeToReturn = [];
+    // find largest denomination that is <= to changeRequired
+    DENOMINATIONS.forEach((denomination) => {
+      console.log(change);
+      if (change >= denomination.value * 100) {
+        const numCoins = Math.floor(change / (denomination.value * 100));
+        change %= denomination.value * 100;
+        console.log(change);
+        console.log('coins ', numCoins);
+        // TODO: subtract coins given from the bank
+
+        changeToReturn.push(new Coin(denomination.value, numCoins));
+      }
+    });
+    console.log(changeToReturn);
+    return true;
   }
 
   // @params: none

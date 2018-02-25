@@ -35,7 +35,7 @@ module.exports = class CoinBank {
   // @params: string coinName to withdraw and the int numberOfCoins to withdraw
   // @returns: true if the withdrawal was successful and false otherwise
   withdrawCoin(coinName, numberOfCoins) {
-    if (this.isCoinInBank(coinName)) {
+    if (this.isCoinInBank(coinName) && this.getCoinNumber(coinName) >= numberOfCoins) {
       return this.bank[coinName].decreaseQuantity(numberOfCoins);
     }
     return false;
@@ -63,10 +63,10 @@ module.exports = class CoinBank {
   // @params: none
   // @returns: the total balance of the coin bank
   getBalance() {
-    return Object.keys(this.bank).reduce(
-      (result, coin2) => (this.bank[coin2].getValue() * this.bank[coin2].getQuantity()) + result,
-      0,
-    );
+    return Object.keys(this.bank).reduce((result, coin2) => {
+      const amt = this.bank[coin2].getValue() * this.bank[coin2].getQuantity();
+      return amt + result;
+    }, 0);
   }
 
   // @params string coinName to check exists in bank

@@ -89,6 +89,15 @@ describe('Canadian CoinBank tests', () => {
     test('Deposit a coin', () => {
       expect(bank.deposit(new Coin(2, 3))).toEqual(true);
     });
+    test('Withdraw a coin when a balance exists', () => {
+      // expect(bank.deposit(new Coin(2, 3))).toEqual(true);
+    });
+    test('Get Change', () => {
+      expect(bank.increaseTwoDollarCoins(2)).toEqual(true);
+      expect(bank.increaseQuarters(3)).toEqual(true);
+      expect(bank.increaseDimes(5)).toEqual(true);
+      expect(bank.getChange(2.35)).toEqual(true);
+    });
   });
 
   describe('Edge Case Canadian CoinBank Transactions', () => {
@@ -132,6 +141,9 @@ describe('Canadian CoinBank tests', () => {
     });
     test('Deposit a foreign coin', () => {
       expect(bank.deposit(new Coin(0.5, 3))).toEqual(false);
+    });
+    test('Get Change when not enough exists in the bank', () => {
+      expect(bank.getChange(2.35)).toEqual(false);
     });
   });
 });
