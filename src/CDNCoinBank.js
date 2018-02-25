@@ -134,6 +134,7 @@ module.exports = class CDNCoinBank {
   // @returns: true if the coin was withdrawn and false otherwise
   withdraw(coin) {
     const denominations = DENOMINATIONS;
+    if (!(coin instanceof Coin)) return false;
     let successfulWithrawl;
     switch (coin.getValue()) {
       case denominations[0].value:
@@ -161,6 +162,7 @@ module.exports = class CDNCoinBank {
   // @returns: true if the coin was deposited and false otherwise
   deposit(coin) {
     const denominations = DENOMINATIONS;
+    if (!(coin instanceof Coin)) return false;
     let successfulDeposit;
     switch (coin.getValue()) {
       case denominations[0].value:
@@ -188,25 +190,33 @@ module.exports = class CDNCoinBank {
   // @returns: a coinArray of the changeRequired and false if the bank cannot cover the amount
   getChange(changeRequired) {
     let change = changeRequired * 100;
+    const changeToReturn = [];
     // check if change requested can be given:
     if (this.getBalance() < changeRequired) return false;
+    // check if change is required
+    if (changeRequired === 0) return changeToReturn;
 
-    const changeToReturn = [];
     // find largest denomination that is <= to changeRequired
     DENOMINATIONS.forEach((denomination) => {
-      console.log(change);
       if (change >= denomination.value * 100) {
         const numCoins = Math.floor(change / (denomination.value * 100));
-        change %= denomination.value * 100;
-        console.log(change);
-        console.log('coins ', numCoins);
-        // TODO: subtract coins given from the bank
-
-        changeToReturn.push(new Coin(denomination.value, numCoins));
+        // check if the number of coins required can be dispensed
+        if (numCoins <= this.coinBank.getCoinNumber(denomination.name)) {
+          // console.log(`change before ${change}`);
+          change %= denomination.value * 100;
+          // console.log(`change after ${change}`);
+          //
+          // console.log('denom ', denomination.name);
+          // console.log('coins avail ', this.coinBank.getCoinNumber(denomination.name));
+          // console.log('coins req ', numCoins);
+          const coinToWithdraw = new Coin(denomination.value, numCoins);
+          // subtract coins from the bank and return coins if balance exists in bank
+          this.withdraw(coinToWithdraw);
+          changeToReturn.push(coinToWithdraw);
+        }
       }
     });
-    console.log(changeToReturn);
-    return true;
+    return changeToReturn;
   }
 
   // @params: none

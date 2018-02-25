@@ -1,6 +1,6 @@
+// const isValidQuantity = require('./Validation/isValidQuantity');
 const CDNCoinBank = require('../src/CDNCoinBank');
 const Inventory = require('../src/Inventory');
-const Coin = require('../src/Coin');
 const toFloatingPoint = require('./Validation/toFloatingPoint');
 
 const MAX_CHANGE_BALANCE = 500;
@@ -19,9 +19,46 @@ module.exports = class VendingMachine {
   stockChangeMachine(coinArray) {
     if (this.canRefillCoins(coinArray)) {
       coinArray.forEach((coin) => {
-        this.deposit(coin);
+        this.changeMachine.deposit(coin);
       });
       return true;
+    }
+    return false;
+  }
+
+  // @params: string rowName, int itemIndex, location of item and
+  //  int quantity to increase inventory
+  // @returns: true if the restock was successful and false otherwise
+  restockItem(rowName, itemIndex, quantity) {
+    return this.vendingInventory.increaseQuantity(rowName, itemIndex, quantity);
+  }
+
+  // @params: none
+  // @returns: listing of items in inventory
+  getInventory() {
+    return this.vendingInventory.getInventory();
+  }
+
+  // @params: none
+  // @returns: total number of items in the vending machine
+  // getTotalNumberOfInventoryItems() {}
+
+  // @params: string rowName, int itemIndex, array of Coin payment
+  // @returns: true if the payment went through and false otherwise
+  purchaseItem(rowName, itemIndex, coinArray) {
+    const payment = this.addUpChange(coinArray);
+    const itemPrice = this.vendingInventory.getItem(rowName, itemIndex).getPrice();
+    // check if item is in inventory; check if payment is > price
+    if (this.vendingInventory.getItemQuantity(rowName, itemIndex) > 1 && itemPrice <= payment) {
+      // DONE IN CDN BANK check if change is required and whether the bank can dispense the change
+      // if (payment - itemPrice > this.getChangeBalance()) {
+      // TODO: increment coinbank with payment and dispense change
+
+      // decrement item
+      this.vendingInventory.decreaseItemQuantity(rowName, itemIndex, 1);
+
+      return true;
+      // }
     }
     return false;
   }
@@ -49,30 +86,12 @@ module.exports = class VendingMachine {
     return this.getChangeDiffFromMax() - sum > 0;
   }
 
-  // @params: Coin coin
-  // @returns: true if the coin was deposited and false otherwise
-  deposit(coin) {
-    const denominations = this.changeMachine.getDenominations();
-    let successfulDeposit;
-    switch (coin.getValue()) {
-      case denominations[0].value:
-        successfulDeposit = this.changeMachine.increaseTwoDollarCoins(coin.getQuantity());
-        break;
-      case denominations[1].value:
-        successfulDeposit = this.changeMachine.increaseOneDollarCoins(coin.getQuantity());
-        break;
-      case denominations[2].value:
-        successfulDeposit = this.changeMachine.increaseQuarters(coin.getQuantity());
-        break;
-      case denominations[3].value:
-        successfulDeposit = this.changeMachine.increaseDimes(coin.getQuantity());
-        break;
-      case denominations[4].value:
-        successfulDeposit = this.changeMachine.increaseNickels(coin.getQuantity());
-        break;
-      default:
-        successfulDeposit = false;
-    }
-    return successfulDeposit;
+  // @params: Coin coinArray to add
+  // @returns: the sum of the given coins
+  static addUpChange(coinArray) {
+    return coinArray.reduce((result, coin) => {
+      const coinSum = coin.getValue() * coin.getQuantity();
+      return toFloatingPoint(result + coinSum);
+    }, 0);
   }
 };
