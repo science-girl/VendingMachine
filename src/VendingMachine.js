@@ -1,4 +1,4 @@
-// const isValidQuantity = require('./Validation/isValidQuantity');
+const isValidItemIndex = require('./Validation/isValidItemIndex');
 const CDNCoinBank = require('../src/CDNCoinBank');
 const Inventory = require('../src/Inventory');
 const toFloatingPoint = require('./Validation/toFloatingPoint');
@@ -39,15 +39,34 @@ module.exports = class VendingMachine {
     return this.vendingInventory.getInventory();
   }
 
+  // @params: string rowName, int itemIndex
+  // @returns: quantity of specific item in inventory, else -1
+  getItemStock(rowName, itemIndex) {
+    if (
+      this.vendingInventory.isRowInInventory(rowName) ||
+      isValidItemIndex(itemIndex) ||
+      this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
+    ) {
+      return this.vendingInventory.getItemQuantity(rowName, itemIndex);
+    }
+    return -1;
+  }
+
   // @params: string rowName, int itemIndex, array of Coin payment
   // @returns: [Item item, Coin changeArray] if purchase went through and false otherwise
   purchaseItem(rowName, itemIndex, coinArray) {
     const payment = this.addUpChange(coinArray);
-    console.log('payment ', payment);
-    if (payment === 0) return false;
+    if (
+      payment === 0 ||
+      !this.vendingInventory.isRowInInventory(rowName) ||
+      !isValidItemIndex(itemIndex) ||
+      !this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
+    ) {
+      return false;
+    }
     const itemPrice = this.vendingInventory.getItem(rowName, itemIndex).getPrice();
     // check if item is in inventory; check if payment is > price
-    if (this.vendingInventory.getItemQuantity(rowName, itemIndex) > 1 && itemPrice <= payment) {
+    if (this.vendingInventory.getItemQuantity(rowName, itemIndex) >= 1 && itemPrice <= payment) {
       // check that change can be dispensed before proceeding with rest of transaction
       // - add coinArray to balance and then subtract change required
       if (payment + this.changeMachine.getBalance() > payment - itemPrice) {
@@ -57,7 +76,7 @@ module.exports = class VendingMachine {
         const change = this.changeMachine.getChange(payment - itemPrice);
         // decrement item
         const item = this.vendingInventory.getItem(rowName, itemIndex);
-        this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
+        console.log(this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1));
 
         return [item, change];
       }

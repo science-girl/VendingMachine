@@ -112,7 +112,7 @@ module.exports = class Inventory {
       isValidQuantity(quantity) &&
       isValidItemIndex(itemIndex) &&
       this.isRowInInventory(rowName) &&
-      this.inventory[rowName].getItemQuantity(itemIndex) > quantity
+      this.inventory[rowName].getItemQuantity(itemIndex) >= quantity
     ) {
       return this.inventory[rowName].decreaseItemQuantity(itemIndex, quantity);
     }
@@ -143,7 +143,13 @@ module.exports = class Inventory {
   }
 
   // @params string rowName to check exists in inventory
-  // @returns true if the item exists and false otherwise
+  // @returns row if the row exists and false otherwise
+  getRow(rowName) {
+    return this.inventory[rowName];
+  }
+
+  // @params string rowName to check exists in inventory
+  // @returns true if the row exists and false otherwise
   isRowInInventory(rowName) {
     return rowName in this.inventory;
   }
