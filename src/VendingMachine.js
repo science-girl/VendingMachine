@@ -39,26 +39,28 @@ module.exports = class VendingMachine {
     return this.vendingInventory.getInventory();
   }
 
-  // @params: none
-  // @returns: total number of items in the vending machine
-  // getTotalNumberOfInventoryItems() {}
-
   // @params: string rowName, int itemIndex, array of Coin payment
-  // @returns: true if the payment went through and false otherwise
+  // @returns: [Item item, Coin changeArray] if purchase went through and false otherwise
   purchaseItem(rowName, itemIndex, coinArray) {
     const payment = this.addUpChange(coinArray);
+    console.log('payment ', payment);
+    if (payment === 0) return false;
     const itemPrice = this.vendingInventory.getItem(rowName, itemIndex).getPrice();
     // check if item is in inventory; check if payment is > price
     if (this.vendingInventory.getItemQuantity(rowName, itemIndex) > 1 && itemPrice <= payment) {
-      // DONE IN CDN BANK check if change is required and whether the bank can dispense the change
-      // if (payment - itemPrice > this.getChangeBalance()) {
-      // TODO: increment coinbank with payment and dispense change
+      // check that change can be dispensed before proceeding with rest of transaction
+      // - add coinArray to balance and then subtract change required
+      if (payment + this.changeMachine.getBalance() > payment - itemPrice) {
+        // deposit itemPrice
+        coinArray.forEach(coin => this.changeMachine.deposit(coin));
+        // get change
+        const change = this.changeMachine.getChange(payment - itemPrice);
+        // decrement item
+        const item = this.vendingInventory.getItem(rowName, itemIndex);
+        this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
 
-      // decrement item
-      this.vendingInventory.decreaseItemQuantity(rowName, itemIndex, 1);
-
-      return true;
-      // }
+        return [item, change];
+      }
     }
     return false;
   }
@@ -88,7 +90,7 @@ module.exports = class VendingMachine {
 
   // @params: Coin coinArray to add
   // @returns: the sum of the given coins
-  static addUpChange(coinArray) {
+  addUpChange(coinArray) {
     return coinArray.reduce((result, coin) => {
       const coinSum = coin.getValue() * coin.getQuantity();
       return toFloatingPoint(result + coinSum);
