@@ -90,13 +90,31 @@ describe('Canadian CoinBank tests', () => {
       expect(bank.deposit(new Coin(2, 3))).toEqual(true);
     });
     test('Withdraw a coin when a balance exists', () => {
-      // expect(bank.deposit(new Coin(2, 3))).toEqual(true);
+      expect(bank.deposit(new Coin(2, 3))).toEqual(true);
+      expect(bank.withdraw(new Coin(2, 3))).toEqual(true);
+      expect(bank.getTwoDollarBalance()).toEqual(0);
     });
     test('Get Change', () => {
       expect(bank.increaseTwoDollarCoins(2)).toEqual(true);
       expect(bank.increaseQuarters(3)).toEqual(true);
       expect(bank.increaseDimes(5)).toEqual(true);
-      expect(bank.getChange(2.35)).toEqual(true);
+      expect(bank.getBalance()).toEqual(5.25);
+      expect(bank.getChange(2.35)).toEqual([
+        { value: 2, quantity: 1 },
+        { value: 0.25, quantity: 1 },
+        { value: 0.1, quantity: 1 },
+      ]);
+      expect(bank.getBalance()).toEqual(2.9);
+    });
+    test('Get Change', () => {
+      expect(bank.increaseOneDollarCoins(2)).toEqual(true);
+      expect(bank.increaseQuarters(3)).toEqual(true);
+      expect(bank.increaseDimes(5)).toEqual(true);
+      expect(bank.getChange(2.35)).toEqual([
+        { quantity: 2, value: 1 },
+        { quantity: 1, value: 0.25 },
+        { quantity: 1, value: 0.1 },
+      ]);
     });
   });
 
@@ -142,8 +160,17 @@ describe('Canadian CoinBank tests', () => {
     test('Deposit a foreign coin', () => {
       expect(bank.deposit(new Coin(0.5, 3))).toEqual(false);
     });
+    test('Deposit a non-coin', () => {
+      expect(bank.deposit('notACoin')).toEqual(false);
+    });
+    test('Withdraw when not enough exists', () => {
+      expect(bank.withdraw(new Coin(0.5, 3))).toEqual(false);
+    });
     test('Get Change when not enough exists in the bank', () => {
       expect(bank.getChange(2.35)).toEqual(false);
+    });
+    test('Get Change when amount requested is 0', () => {
+      expect(bank.getChange(0)).toEqual([]);
     });
   });
 });
