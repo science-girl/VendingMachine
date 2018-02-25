@@ -94,7 +94,7 @@ describe('Canadian CoinBank tests', () => {
       expect(bank.withdraw(new Coin(2, 3))).toEqual(true);
       expect(bank.getTwoDollarBalance()).toEqual(0);
     });
-    test('Get Change', () => {
+    test('Get smallest amount of change for 2.35 given the bank balance', () => {
       expect(bank.increaseTwoDollarCoins(2)).toEqual(true);
       expect(bank.increaseQuarters(3)).toEqual(true);
       expect(bank.increaseDimes(5)).toEqual(true);
@@ -106,7 +106,7 @@ describe('Canadian CoinBank tests', () => {
       ]);
       expect(bank.getBalance()).toEqual(2.9);
     });
-    test('Get Change', () => {
+    test('Get smallest amount of change for 2.35 given the bank balance', () => {
       expect(bank.increaseOneDollarCoins(2)).toEqual(true);
       expect(bank.increaseQuarters(3)).toEqual(true);
       expect(bank.increaseDimes(5)).toEqual(true);
@@ -171,6 +171,16 @@ describe('Canadian CoinBank tests', () => {
     });
     test('Get Change when amount requested is 0', () => {
       expect(bank.getChange(0)).toEqual([]);
+    });
+    test('Get Change when bank balance will be 0', () => {
+      expect(bank.increaseQuarters(3)).toEqual(true);
+      expect(bank.getChange(0.75)).toEqual([{ quantity: 3, value: 0.25 }]);
+      expect(bank.getBalance()).toEqual(0);
+    });
+    test('Get Change when only a partial amount of the change due is available', () => {
+      expect(bank.increaseQuarters(3)).toEqual(true);
+      expect(bank.increaseDimes(5)).toEqual(true);
+      expect(bank.getChange(1.6)).toEqual(false);
     });
   });
 });
