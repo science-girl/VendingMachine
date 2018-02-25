@@ -7,9 +7,11 @@ const inventoryData = require('../__mock__/VendingMachine/vendingMachineObject')
 describe('Vending Machine tests', () => {
   let vendingMachine;
   let coinArray;
+  let largeCoinArray;
   let emptyVendingMachine;
   beforeEach(() => {
-    coinArray = [new Coin(2, 4), new Coin(0.5, 4), new Coin(0.1, 3)];
+    coinArray = [new Coin(2, 4), new Coin(0.25, 8), new Coin(0.1, 3)];
+    largeCoinArray = [new Coin(2, 500), new Coin(0.5, 4), new Coin(0.1, 3)];
     emptyVendingMachine = new VendingMachine();
     vendingMachine = new VendingMachine(inventoryData);
   });
@@ -20,14 +22,13 @@ describe('Vending Machine tests', () => {
     test('Check if change machine can be refilled', () => {
       expect(vendingMachine.canRefillCoins(coinArray)).toEqual(true);
     });
-    test('Get number of unique items in the vending machine', () => {
-      expect().toEqual();
-    });
     test('Get total number of items in the vending machine', () => {
       expect().toEqual();
     });
     test('Get balance of change in the vending machine', () => {
-      expect().toEqual();
+      expect(vendingMachine.getChangeBalance()).toEqual(0);
+      expect(vendingMachine.deposit(new Coin(2, 4))).toEqual(true);
+      expect(vendingMachine.getChangeBalance()).toEqual(8);
     });
     test('Purchase an item with exact change', () => {
       expect().toEqual();
@@ -42,7 +43,8 @@ describe('Vending Machine tests', () => {
       expect().toEqual();
     });
     test('Restock change', () => {
-      expect().toEqual();
+      expect(vendingMachine.stockChangeMachine(coinArray)).toEqual(true);
+      expect(vendingMachine.getChangeBalance()).toEqual(10.3);
     });
     test('Swap an item in the vending machine for a new item', () => {
       expect().toEqual();
@@ -53,13 +55,16 @@ describe('Vending Machine tests', () => {
     test('Print list of Inventory in the vending machine', () => {
       expect().toEqual();
     });
+    test('Deposit a coin', () => {
+      expect(vendingMachine.deposit(new Coin(2, 3))).toEqual(true);
+    });
   });
   describe('Edge Case Vending Machine Transactions', () => {
     test('Create a vending machine with no dimensions or change', () => {
       expect(emptyVendingMachine).toEqual(emptyMachineData);
     });
     test('Create a vending machine without specifying initial amount of change available', () => {
-      expect().toEqual();
+      expect(emptyVendingMachine).toEqual(emptyMachineData);
     });
     test('Purchase an item that does not exist in the vending machine', () => {
       expect().toEqual();
@@ -75,6 +80,12 @@ describe('Vending Machine tests', () => {
     });
     test('Restock an item when the item queue is full', () => {
       expect().toEqual();
+    });
+    test('Check if change machine can be refilled', () => {
+      expect(vendingMachine.canRefillCoins(largeCoinArray)).toEqual(false);
+    });
+    test('Deposit a foreign coin', () => {
+      expect(vendingMachine.deposit(new Coin(0.5, 3))).toEqual(false);
     });
   });
 });

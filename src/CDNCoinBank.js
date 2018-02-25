@@ -130,6 +130,12 @@ module.exports = class CDNCoinBank {
   }
 
   // @params: none
+  // @returns: the denomination scheme this coin bank adheres to
+  getDenominations() {
+    return DENOMINATIONS;
+  }
+
+  // @params: none
   // @returns: the monetary balance of the coinBank
   getBalance() {
     return this.coinBank.getBalance();

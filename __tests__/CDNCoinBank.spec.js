@@ -5,7 +5,6 @@ const CDNCoinBank = require('../src/CDNCoinBank');
 //
 describe('Canadian CoinBank tests', () => {
   let bank;
-
   beforeEach(() => {
     bank = new CDNCoinBank();
   });
