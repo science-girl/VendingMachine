@@ -1,13 +1,8 @@
 const isValidQuantity = require('./Validation/isValidQuantity');
 const isValidValue = require('./Validation/isValidValue');
+const toFloatingPoint = require('./Validation/toFloatingPoint');
 // TODO: figure out how to set these as protected variables
 const MIN_COIN_VALUE = 0.05;
-
-// @params: value to change to a 2 point floating number
-// @returns a 2 point floating number of the given value
-function toFloatingPoint(value) {
-  return Math.round(value * 100) / 100;
-}
 
 module.exports = class Coin {
   // Constructor
