@@ -76,7 +76,7 @@ module.exports = class Inventory {
   // @params string rowName, int itemIndex to update and new float price
   // @returns true if the price was updated for the item and false otherwise
   updatePrice(rowName, itemIndex, newPrice) {
-    if (this.isItemInInventory(rowName) && isValidPrice(newPrice)) {
+    if (this.isRowInInventory(rowName) && isValidPrice(newPrice)) {
       return this.inventory[rowName].getItem(itemIndex).setPrice(newPrice);
     }
     return false;
@@ -85,7 +85,7 @@ module.exports = class Inventory {
   // @params string rowName, int itemIndex to update and string newName
   // @returns true if the update occurred and false otherwise
   updateName(rowName, itemIndex, newName) {
-    if (this.isItemInInventory(rowName) && isValidName(newName) && isValidItemIndex(itemIndex)) {
+    if (this.isRowInInventory(rowName) && isValidName(newName) && isValidItemIndex(itemIndex)) {
       return this.inventory[rowName].getItem(itemIndex).setName(newName);
     }
     return false;
@@ -97,7 +97,7 @@ module.exports = class Inventory {
     if (
       isValidQuantity(quantity) &&
       isValidItemIndex(itemIndex) &&
-      this.isItemInInventory(rowName)
+      this.isRowInInventory(rowName)
     ) {
       return this.inventory[rowName].increaseItemQuantity(itemIndex, quantity);
     }
@@ -111,7 +111,7 @@ module.exports = class Inventory {
     if (
       isValidQuantity(quantity) &&
       isValidItemIndex(itemIndex) &&
-      this.isItemInInventory(rowName) &&
+      this.isRowInInventory(rowName) &&
       this.inventory[rowName].getItemQuantity(itemIndex) > quantity
     ) {
       return this.inventory[rowName].decreaseItemQuantity(itemIndex, quantity);
@@ -123,7 +123,7 @@ module.exports = class Inventory {
   // @params: string rowName and int itemIndex of the item to retrive
   // @returns: the Item corresponding to the given Name and {} if the item does not exist
   getItem(rowName, itemIndex) {
-    if (this.isItemInInventory(rowName) && isValidItemIndex(itemIndex)) {
+    if (this.isRowInInventory(rowName) && isValidItemIndex(itemIndex)) {
       return this.inventory[rowName].getItem(itemIndex);
     }
     return {};
@@ -132,7 +132,7 @@ module.exports = class Inventory {
   // @params: string rowName and int itemIndex of the item to retrive
   // @returns: the quantity corresponding to the given Name and -1 if the item does not exist
   getItemQuantity(rowName, itemIndex) {
-    if (this.isItemInInventory(rowName) && isValidItemIndex(itemIndex)) {
+    if (this.isRowInInventory(rowName) && isValidItemIndex(itemIndex)) {
       return this.inventory[rowName].getItemQuantity(itemIndex);
     }
     return -1;
@@ -140,7 +140,7 @@ module.exports = class Inventory {
 
   // @params string rowName to check exists in inventory
   // @returns true if the item exists and false otherwise
-  isItemInInventory(rowName) {
+  isRowInInventory(rowName) {
     return rowName in this.inventory;
   }
 };
