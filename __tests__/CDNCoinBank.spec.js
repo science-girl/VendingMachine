@@ -1,4 +1,5 @@
 const CDNCoinBank = require('../src/CDNCoinBank');
+const Coin = require('../src/Coin');
 //
 // NOTE: These tests only cover methods specific to CDNCoinBank, as
 // CoinBank.spec.js uses as its test data the values for the CDNCoinBank
@@ -85,6 +86,9 @@ describe('Canadian CoinBank tests', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.getNickelBalance()).toEqual(0.2);
     });
+    test('Deposit a coin', () => {
+      expect(bank.deposit(new Coin(2, 3))).toEqual(true);
+    });
   });
 
   describe('Edge Case Canadian CoinBank Transactions', () => {
@@ -125,6 +129,9 @@ describe('Canadian CoinBank tests', () => {
     test('Decrease Nickels', () => {
       expect(bank.increaseNickels(4)).toEqual(true);
       expect(bank.decreaseNickels(5)).toEqual(false);
+    });
+    test('Deposit a foreign coin', () => {
+      expect(bank.deposit(new Coin(0.5, 3))).toEqual(false);
     });
   });
 });

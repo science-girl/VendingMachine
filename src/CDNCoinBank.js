@@ -135,6 +135,33 @@ module.exports = class CDNCoinBank {
     return DENOMINATIONS;
   }
 
+  // @params: Coin coin
+  // @returns: true if the coin was deposited and false otherwise
+  deposit(coin) {
+    const denominations = DENOMINATIONS; // this.changeMachine.getDenominations();
+    let successfulDeposit;
+    switch (coin.getValue()) {
+      case denominations[0].value:
+        successfulDeposit = this.increaseTwoDollarCoins(coin.getQuantity());
+        break;
+      case denominations[1].value:
+        successfulDeposit = this.increaseOneDollarCoins(coin.getQuantity());
+        break;
+      case denominations[2].value:
+        successfulDeposit = this.increaseQuarters(coin.getQuantity());
+        break;
+      case denominations[3].value:
+        successfulDeposit = this.increaseDimes(coin.getQuantity());
+        break;
+      case denominations[4].value:
+        successfulDeposit = this.increaseNickels(coin.getQuantity());
+        break;
+      default:
+        successfulDeposit = false;
+    }
+    return successfulDeposit;
+  }
+
   // @params: none
   // @returns: the monetary balance of the coinBank
   getBalance() {
