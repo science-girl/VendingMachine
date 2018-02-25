@@ -1,5 +1,5 @@
 const VendingMachine = require('../src/VendingMachine');
-const emptyMachineData = require('../__mock__/emptyMachineMockData');
+const emptyMachineData = require('../__mock__/CoinBank/emptyMachineMockData');
 // const CDNCoinBank = require('../src/CDNCoinBank');
 // const Inventory = require('../src/Inventory');
 
@@ -51,7 +51,7 @@ describe('Vending Machine tests', () => {
     });
   });
   describe('Edge Case Vending Machine Transactions', () => {
-    test('Create a vending machine with no dimensions', () => {
+    test('Create a vending machine with no dimensions or change', () => {
       expect(vendingMachine).toEqual(emptyMachineData);
     });
     test('Create a vending machine without specifying initial amount of change available', () => {

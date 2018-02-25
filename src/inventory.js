@@ -1,135 +1,146 @@
-const DEFAULT_QUANTITY_VALUE = 0;
-const ITEM_ACCESSOR = 'item';
-const QUANTITY_ACCESSOR = 'quantity';
+const Row = require('./Row');
+const isValidPrice = require('./Validation/isValidPrice');
+const isValidName = require('./Validation/isValidName');
+const isValidItemIndex = require('./Validation/isValidItemIndex');
+const isValidQuantity = require('./Validation/isValidQuantity');
 
-// @params integer quantity
-// @returns true if quantity is a valid input and false otherwise
-function isValidQuantity(quantity) {
-  // a valid quantity:
-  // - must exist
-  // - be a positive integer
-  // - be an integer
-  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
-}
-
-// @params string name
-// @returns true if name a valid input
-function isValidName(name) {
-  return !(!name || name === '');
-}
+const DEFAULT_MAX_ROW_SIZE = 100;
 
 module.exports = class Inventory {
   // Constructor
-  // @params an empty array or an array of items
+  // @params no argument or an array of rows
+  //       arrayOfRows:  [<Row>, ..., <Row>]
+  //       int maxRowSize to specify maximum number or rows
   // @returns an item with the given values
-  constructor(arrayOfItems) {
-    // {<item.name>: {item: <item>, quantity: <quantity>}, ...}
+  // {
+  //   A: {[{item, quantity}, {item,quantity}, {item, quantity}]}
+  //   B: {[{item, quantity}, {item,quantity}, {item, quantity}]}
+  // ...
+  //   N: {[{item, quantity}, {item,quantity}, {item, quantity}]}
+  // }
+  constructor(arrayOfRows, maxRowSize) {
+    this.maxRowSize = maxRowSize && isValidQuantity(maxRowSize) ? maxRowSize : DEFAULT_MAX_ROW_SIZE;
     this.inventory = {};
-    if (arrayOfItems) {
-      arrayOfItems.map((item) => {
-        const key = Object.keys(item)[0];
-        const newInventoryEntry = {};
-        newInventoryEntry[ITEM_ACCESSOR] = item[key];
-        newInventoryEntry[QUANTITY_ACCESSOR] = DEFAULT_QUANTITY_VALUE;
-        this.inventory[key] = newInventoryEntry;
-        return this.inventory[key];
+    if (arrayOfRows) {
+      // loop through arrayOfRows, get each row
+      arrayOfRows.forEach((row) => {
+        if (row instanceof Row) {
+          this.inventory[row.getRowName()] = row;
+        }
       });
     }
   }
 
-  // @params string entryName, an Item item and possible integer quantity to add to inventory
-  // @returns true if added and false otherwise
-  addEntry(entryName, item, quantity) {
-    if (!(entryName in this.inventory) && isValidName(entryName)) {
-      this.inventory[entryName] = item;
-      this.inventory[QUANTITY_ACCESSOR] = isValidQuantity(quantity)
-        ? quantity
-        : DEFAULT_QUANTITY_VALUE;
+  // @params: int maxRowSize
+  // @returns: true if maxRowSize was set and false otherwise
+  setMaxRowSize(maxRowSize) {
+    if (isValidQuantity(maxRowSize)) {
+      this.maxRowSize = maxRowSize;
       return true;
     }
-    return false;
-  }
-
-  // @params Name of Entry to remove
-  // @returns true if item was removed and false otherwise
-  removeEntry(itemName) {
-    if (itemName in this.inventory) {
-      delete this.inventory[itemName];
-      return true;
-    }
-    return false;
-  }
-
-  // @params Name of Entry to update and new price
-  // @returns true if the price was updated for the item and false otherwise
-  updatePrice(itemName, newPrice) {
-    if (this.isItemInInventory(itemName)) {
-      return this.inventory[itemName].item.setPrice(newPrice);
-    }
-    return false;
-  }
-
-  // @params string itemName of Entry to update and string newName
-  // @returns true if the update occurred and false otherwise
-  updateName(itemName, newName) {
-    if (this.isItemInInventory(itemName)) {
-      this.inventory[newName] = this.inventory[itemName];
-      delete this.inventory[itemName];
-      return true;
-    }
-    return false;
-  }
-
-  // @params string itemName to increase and integer quantity
-  // @returns returns true if quantity was increased and false if the quanity wasn't increased
-  increaseQuantity(itemName, quantity) {
-    if (isValidQuantity(quantity) && this.isItemInInventory(itemName)) {
-      this.inventory[itemName].quantity = this.inventory[itemName].quantity + quantity;
-      return true;
-    }
-    // else no change since the quantity given isn't valid
-    return false;
-  }
-
-  // @params string itemName to decrease and integer quantity
-  // @returns returns true if quantity was decreased and false if the quanity wasn't increased
-  decreaseQuantity(itemName, quantity) {
-    if (
-      isValidQuantity(quantity) &&
-      this.isItemInInventory(itemName) &&
-      this.inventory[itemName].quantity > quantity
-    ) {
-      this.inventory[itemName].quantity = this.inventory[itemName].quantity - quantity;
-      return true;
-    }
-    // else no change since the quantity given isn't valid
     return false;
   }
 
   // @params: none
-  // @returns: the inventory
+  // @returns: the maxRowSize set
+  getMaxRowSize() {
+    return this.maxRowSize;
+  }
+
+  // @params: none
+  // @returns: all the rows in inventory
   getInventory() {
     return this.inventory;
   }
 
-  // @params: string itemName
-  // @returns: true if the item quantity is 0 and false otherwise
-  isEmpty(itemName) {
-    return !this.inventory[itemName].quantity;
-  }
-
-  // @params: string itemName of the item to retrive
-  // @returns: the Item corresponding to the given Name and false if the item does not exist
-  getItem(itemName) {
-    if (this.isItemInInventory(itemName)) {
-      return this.inventory[itemName].item;
+  // @params Row row to add to inventory
+  // @returns true if added and false otherwise
+  addRow(row) {
+    if (row instanceof Row && !(row.getRowName() in this.inventory)) {
+      this.inventory[row.getRowName()] = row;
+      return true;
     }
     return false;
   }
 
-  // @params string itemName to check exists in inventory
+  // @params string rowName to remove
+  // @returns true if row was removed and false otherwise
+  removeRow(rowName) {
+    if (rowName in this.inventory) {
+      delete this.inventory[rowName];
+      return true;
+    }
+    return false;
+  }
+
+  // @params string rowName, int itemIndex to update and new float price
+  // @returns true if the price was updated for the item and false otherwise
+  updatePrice(rowName, itemIndex, newPrice) {
+    if (this.isItemInInventory(rowName) && isValidPrice(newPrice)) {
+      return this.inventory[rowName].getItem(itemIndex).setPrice(newPrice);
+    }
+    return false;
+  }
+
+  // @params string rowName, int itemIndex to update and string newName
+  // @returns true if the update occurred and false otherwise
+  updateName(rowName, itemIndex, newName) {
+    if (this.isItemInInventory(rowName) && isValidName(newName) && isValidItemIndex(itemIndex)) {
+      return this.inventory[rowName].getItem(itemIndex).setName(newName);
+    }
+    return false;
+  }
+
+  // @params string rowName, int itemIndex to increase and integer quantity
+  // @returns returns true if quantity was increased and false if the quanity wasn't increased
+  increaseQuantity(rowName, itemIndex, quantity) {
+    if (
+      isValidQuantity(quantity) &&
+      isValidItemIndex(itemIndex) &&
+      this.isItemInInventory(rowName)
+    ) {
+      return this.inventory[rowName].increaseItemQuantity(itemIndex, quantity);
+    }
+    // else no change since the quantity given isn't valid
+    return false;
+  }
+
+  // @params string rowName, int itemIndex to decrease by integer quantity
+  // @returns returns true if quantity was decreased and false if the quanity wasn't increased
+  decreaseQuantity(rowName, itemIndex, quantity) {
+    if (
+      isValidQuantity(quantity) &&
+      isValidItemIndex(itemIndex) &&
+      this.isItemInInventory(rowName) &&
+      this.inventory[rowName].getItemQuantity(itemIndex) > quantity
+    ) {
+      return this.inventory[rowName].decreaseItemQuantity(itemIndex, quantity);
+    }
+    // else no change since the quantity given isn't valid
+    return false;
+  }
+
+  // @params: string rowName and int itemIndex of the item to retrive
+  // @returns: the Item corresponding to the given Name and {} if the item does not exist
+  getItem(rowName, itemIndex) {
+    if (this.isItemInInventory(rowName) && isValidItemIndex(itemIndex)) {
+      return this.inventory[rowName].getItem(itemIndex);
+    }
+    return {};
+  }
+
+  // @params: string rowName and int itemIndex of the item to retrive
+  // @returns: the quantity corresponding to the given Name and -1 if the item does not exist
+  getItemQuantity(rowName, itemIndex) {
+    if (this.isItemInInventory(rowName) && isValidItemIndex(itemIndex)) {
+      return this.inventory[rowName].getItemQuantity(itemIndex);
+    }
+    return -1;
+  }
+
+  // @params string rowName to check exists in inventory
   // @returns true if the item exists and false otherwise
-  isItemInInventory(itemName) {
-    return itemName in this.inventory;
+  isItemInInventory(rowName) {
+    return rowName in this.inventory;
   }
 };
