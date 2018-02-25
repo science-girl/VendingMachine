@@ -13,5 +13,5 @@ module.exports = {
       },
     },
   },
-  vendingInventory: { inventory: {} },
+  vendingInventory: { inventory: {}, maxRowSize: 100 },
 };

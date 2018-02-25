@@ -1,20 +1,24 @@
 const VendingMachine = require('../src/VendingMachine');
-const emptyMachineData = require('../__mock__/CoinBank/emptyMachineMockData');
-// const CDNCoinBank = require('../src/CDNCoinBank');
-// const Inventory = require('../src/Inventory');
+const Coin = require('../src/Coin');
+const emptyMachineData = require('../__mock__/VendingMachine/emptyMachineMockData');
+const threeByThreeMachineData = require('../__mock__/VendingMachine/threeByThreeVendingMachineData');
+const inventoryData = require('../__mock__/VendingMachine/vendingMachineObject');
 
 describe('Vending Machine tests', () => {
   let vendingMachine;
-
+  let coinArray;
+  let emptyVendingMachine;
   beforeEach(() => {
-    vendingMachine = new VendingMachine();
+    coinArray = [new Coin(2, 4), new Coin(0.5, 4), new Coin(0.1, 3)];
+    emptyVendingMachine = new VendingMachine();
+    vendingMachine = new VendingMachine(inventoryData);
   });
   describe('Successful Vending Machine Transactions', () => {
-    test('Create a vending machine of 8 rows and 4 columns', () => {
-      expect().toEqual();
+    test('Create a vending machine of 3 rows and 3 columns', () => {
+      expect(vendingMachine).toEqual(threeByThreeMachineData);
     });
-    test('Create a vending machine with a specific amount of change available', () => {
-      expect().toEqual();
+    test('Check if change machine can be refilled', () => {
+      expect(vendingMachine.canRefillCoins(coinArray)).toEqual(true);
     });
     test('Get number of unique items in the vending machine', () => {
       expect().toEqual();
@@ -52,7 +56,7 @@ describe('Vending Machine tests', () => {
   });
   describe('Edge Case Vending Machine Transactions', () => {
     test('Create a vending machine with no dimensions or change', () => {
-      expect(vendingMachine).toEqual(emptyMachineData);
+      expect(emptyVendingMachine).toEqual(emptyMachineData);
     });
     test('Create a vending machine without specifying initial amount of change available', () => {
       expect().toEqual();
