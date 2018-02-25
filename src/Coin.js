@@ -1,27 +1,7 @@
+const isValidQuantity = require('./Validation/isValidQuantity');
+const isValidValue = require('./Validation/isValidValue');
 // TODO: figure out how to set these as protected variables
-const MAX_COIN_VALUE = 2.0;
 const MIN_COIN_VALUE = 0.05;
-
-// @params: value to validate
-// @returns: true if this value is valid and false otherwise
-function isValidValue(value) {
-  // a coin is valid if:
-  // - the value exists
-  // - it is an int or double
-  // - it is more than 0
-  // - it is less than the max amt
-  return !(!value || Number.isNaN(parseFloat(value)) || value < 0 || value > MAX_COIN_VALUE);
-}
-
-// @params integer quantity
-// @returns true if quantity is a valid input and false otherwise
-function isValidQuantity(quantity) {
-  // a valid quantity:
-  // - must exist
-  // - be a positive integer
-  // - be an integer
-  return !(!quantity || quantity < 0 || quantity % 1 !== 0);
-}
 
 // @params: value to change to a 2 point floating number
 // @returns a 2 point floating number of the given value

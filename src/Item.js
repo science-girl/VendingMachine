@@ -1,17 +1,8 @@
+const isValidName = require('./Validation/isValidName');
+const isValidPrice = require('./Validation/isValidPrice');
+
 const DEFAULT_ITEM_NAME = 'default';
 const DEFAULT_ITEM_PRICE = 0.0;
-
-// @params string name
-// @returns true if name a valid input
-function isValidName(name) {
-  return !(!name || name === '');
-}
-
-// @params double price
-// @returns true if price a valid input
-function isValidPrice(price) {
-  return !(!price || price < 0);
-}
 
 module.exports = class Item {
   // Constructor
