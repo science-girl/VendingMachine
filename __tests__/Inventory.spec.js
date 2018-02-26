@@ -44,6 +44,11 @@ describe('Iventory tests', () => {
     test('Get a specific item quantity in inventory', () => {
       expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(0);
     });
+    test('Set an item quantity in inventory', () => {
+      expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(0);
+      expect(inventoryWithItems.setItemQuantity('A', 0, 4)).toEqual(true);
+      expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(4);
+    });
     test('Remove a row from inventory', () => {
       expect(inventoryWithItems.addRow(rowC)).toEqual(true);
       expect(inventoryWithItems.getInventory()).toEqual(inventoryWithThreeRowsData);
@@ -82,6 +87,17 @@ describe('Iventory tests', () => {
     });
     test('Update price of a non-existent item in inventory', () => {
       expect(inventoryWithItems.updatePrice('D', 0, 3.0)).toEqual(false);
+    });
+    test('Set an item quantity with a negative number', () => {
+      expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(0);
+      expect(inventoryWithItems.setItemQuantity('A', 0, -4)).toEqual(false);
+      expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(0);
+    });
+    test('Set an item quantity with a row that does not exist', () => {
+      expect(inventoryWithItems.setItemQuantity('Z', 0, 4)).toEqual(false);
+    });
+    test('Set an item quantity with an out-of-bound-index', () => {
+      expect(inventoryWithItems.setItemQuantity('A', 26, 4)).toEqual(false);
     });
     test('Increase a non-existent item in inventory', () => {
       expect(inventoryWithItems.increaseQuantity('D', 0, 3.0)).toEqual(false);

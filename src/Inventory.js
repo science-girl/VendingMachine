@@ -1,4 +1,5 @@
 const Row = require('./Row');
+const Item = require('./Item');
 const isValidPrice = require('./Validation/isValidPrice');
 const isValidName = require('./Validation/isValidName');
 const isValidItemIndex = require('./Validation/isValidItemIndex');
@@ -140,6 +141,15 @@ module.exports = class Inventory {
       return this.inventory[rowName].getItemQuantity(itemIndex);
     }
     return -1;
+  }
+
+  // @params: string rowName and int itemIndex of the item to retrive
+  // @returns: true if the quantity was set and false otherwise
+  setItemQuantity(rowName, itemIndex, quantity) {
+    if (this.isRowInInventory(rowName)) {
+      return this.inventory[rowName].setItemQuantity(itemIndex, quantity);
+    }
+    return false;
   }
 
   // @params string rowName to check exists in inventory
