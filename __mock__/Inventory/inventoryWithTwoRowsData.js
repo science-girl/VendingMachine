@@ -1,18 +1,17 @@
 module.exports = {
   inventory: {
     A: {
+      maxItemQuantity: 20,
       row: {
         A: [
-          {
-            item: { name: 'Pepsi', price: 2.5 },
-            quantity: 0,
-          },
+          { item: { name: 'Pepsi', price: 2.5 }, quantity: 0 },
           { item: { name: 'Coke', price: 1.45 }, quantity: 0 },
         ],
       },
       rowName: 'A',
     },
     B: {
+      maxItemQuantity: 20,
       row: {
         B: [
           {

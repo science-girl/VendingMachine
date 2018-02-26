@@ -32,12 +32,17 @@ describe('Iventory tests', () => {
     });
     test('Add a row to inventory with 2 items', () => {
       expect(inventoryWithItems.addRow(rowC)).toEqual(true);
-      expect(inventoryWithItems.getInventory()).toEqual(inventoryWithThreeRowsData);
+      expect(inventoryWithItems.isRowInInventory('C')).toEqual(true);
     });
     test('Get default row size and reset it to 20', () => {
       expect(inventoryWithItems.getMaxRowSize()).toEqual(100);
       expect(inventoryWithItems.setMaxRowSize(20)).toEqual(true);
       expect(inventoryWithItems.getMaxRowSize()).toEqual(20);
+    });
+    test('Set maximum row size to a negative integer', () => {
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(100);
+      expect(inventoryWithItems.setMaxRowSize(-20)).toEqual(false);
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(100);
     });
     test('No room is available in the row for an additional item', () => {
       expect(inventoryWithItems.setMaxRowSize(3)).toEqual(true);
@@ -67,7 +72,6 @@ describe('Iventory tests', () => {
     });
     test('Remove a row from inventory', () => {
       expect(inventoryWithItems.addRow(rowC)).toEqual(true);
-      expect(inventoryWithItems.getInventory()).toEqual(inventoryWithThreeRowsData);
       expect(inventoryWithItems.removeRow('C')).toEqual(true);
     });
     test('Add an item to inventory', () => {

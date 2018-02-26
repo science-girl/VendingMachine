@@ -6,13 +6,14 @@ const isValidItemIndex = require('./Validation/isValidItemIndex');
 const ITEM_ACCESSOR = 'item';
 const QUANTITY_ACCESSOR = 'quantity';
 const DEFAULT_NAME = 'default';
+const MAX_ITEM_QUANTITY = 20;
 
 module.exports = class Row {
   // Constructor
   // @params: string name for this row and itemArray populating this row
-  // [<Item>, ... <Item>]
+  // [<Item>, ... <Item>], optionally int maxItemQuantity
   // @returns: <name>: {[{item, quantity}, {item,quantity}, {item, quantity}]}
-  constructor(name, itemArray) {
+  constructor(name, itemArray, maxItemQuantity) {
     const newRow = {};
     if (isValidName(name)) {
       this.rowName = name;
@@ -33,6 +34,23 @@ module.exports = class Row {
       newRow[DEFAULT_NAME] = [];
       this.row = newRow;
     }
+    this.maxItemQuantity = isValidQuantity(maxItemQuantity) ? maxItemQuantity : MAX_ITEM_QUANTITY;
+  }
+
+  // @params: int maxItemQuantity
+  // @returns: true if the quantity was set and false otherwise
+  setMaxItemQuantity(maxItemQuantity) {
+    if (isValidQuantity(maxItemQuantity)) {
+      this.maxItemQuantity = maxItemQuantity;
+      return true;
+    }
+    return false;
+  }
+
+  // @params: none
+  // @returns: int maxItemQuantity
+  getMaxItemQuantity() {
+    return this.maxItemQuantity;
   }
 
   // @params: none
@@ -59,7 +77,8 @@ module.exports = class Row {
     if (
       isValidItemIndex(itemIndex) &&
       isValidQuantity(quantity) &&
-      this.isWithinBounds(itemIndex)
+      this.isWithinBounds(itemIndex) &&
+      quantity + this.getItemQuantity(itemIndex) < this.getMaxItemQuantity()
     ) {
       this.row[this.rowName][itemIndex].quantity = quantity;
       return true;
@@ -70,7 +89,11 @@ module.exports = class Row {
   // @params: int itemIndex, int amtToIncrease
   // @returns: true if the item quantity was increased and false otherwise
   increaseItemQuantity(itemIndex, amtToIncrease) {
-    if (isValidQuantity(amtToIncrease) && this.isWithinBounds(itemIndex)) {
+    if (
+      isValidQuantity(amtToIncrease) &&
+      this.isWithinBounds(itemIndex) &&
+      amtToIncrease + this.getItemQuantity(itemIndex) < this.getMaxItemQuantity()
+    ) {
       this.row[this.rowName][itemIndex].quantity += amtToIncrease;
       return true;
     }
@@ -127,12 +150,19 @@ module.exports = class Row {
     return -1;
   }
 
-  // @params:  Item item to insert into a row
+  // @params:  Item item to insert into a row, optional int quanitity
   // @returns: index if the item was added and -1 otherwise
-  addItem(item) {
+  addItem(item, quantity) {
     if (item instanceof Item) {
       this.row[this.rowName].push(item);
-      return this.getNumberOfItemsInRow() - 1;
+      const itemIndex = this.getNumberOfItemsInRow() - 1;
+      if (isValidQuantity(quantity)) {
+        this.row[this.rowName][itemIndex].quantity = quantity;
+      } else {
+        this.row[this.rowName][itemIndex].quantity = 0;
+      }
+
+      return itemIndex;
     }
     return -1;
   }

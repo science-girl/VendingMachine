@@ -151,8 +151,8 @@ module.exports = class Inventory {
   // @returns: index of item if successfully added and -1 otherwise
   addItem(rowName, item, quantity) {
     if (this.isRowInInventory(rowName) && item instanceof Item && this.isRoomForMore(rowName)) {
-      const itemIndex = this.inventory[rowName].addItem(item);
-      this.inventory[rowName].setItemQuantity(itemIndex, quantity);
+      const itemIndex = this.inventory[rowName].addItem(item, quantity);
+      // this.inventory[rowName].setItemQuantity(itemIndex, quantity);
       return itemIndex;
     }
     return -1;

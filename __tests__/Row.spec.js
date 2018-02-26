@@ -22,14 +22,19 @@ describe('Row tests', () => {
     test('Create a row with 3 items', () => {
       expect(row.getRow()).toEqual(rowWithThreeItemsData);
     });
-    test('Add item to a row', () => {
+    test('Add item to a row without quantity', () => {
       expect(row.addItem(item4)).toEqual(3);
       expect(row.getRow()).toEqual(rowWithFourItemsData);
     });
-    test('Add same item to a row', () => {
+    test('Add same item to a row without quantity', () => {
       expect(row.addItem(item4)).toEqual(3);
       expect(row.addItem(item4)).toEqual(4);
       expect(row.getNumberOfItemsInRow()).toEqual(5);
+    });
+    test('Add item to a row with quantity', () => {
+      expect(row.addItem(item4, 5)).toEqual(3);
+      expect(row.getNumberOfItemsInRow()).toEqual(4);
+      expect(row.getItemQuantity(3)).toEqual(5);
     });
     test('Remove item from a row', () => {
       expect(row.addItem(item4)).toEqual(3);
@@ -87,13 +92,27 @@ describe('Row tests', () => {
   });
   describe('Edge Case Row Transactions', () => {
     test('Create a row with 0 items and no name', () => {
-      expect(rowWithNoItems).toEqual({ row: { default: [] }, rowName: 'default' });
+      expect(rowWithNoItems).toEqual({
+        maxItemQuantity: 20,
+        row: { default: [] },
+        rowName: 'default',
+      });
     });
     test('Add item to a row with no items', () => {
       expect(rowWithNoItems.addItem(item1)).toEqual(0);
     });
     test('Add item to a row with a non-item object', () => {
       expect(row.addItem('notAnItem')).toEqual(-1);
+    });
+    test('Add item to a row with negative quantity', () => {
+      expect(row.addItem(item4, -5)).toEqual(3);
+      expect(row.getNumberOfItemsInRow()).toEqual(4);
+      expect(row.getItemQuantity(3)).toEqual(0);
+    });
+    test('Increase quantity of item when max quantity will be exceeded', () => {
+      expect(row.setMaxItemQuantity(4)).toEqual(true);
+      expect(row.addItem(item4)).toEqual(3);
+      expect(row.setItemQuantity(3, 5)).toEqual(false);
     });
     test('Increase item quantity by a negative number', () => {
       expect(row.increaseItemQuantity(0, -2)).toEqual(false);

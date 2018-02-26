@@ -1,5 +1,6 @@
 module.exports = {
   A: {
+    maxItemQuantity: 20,
     row: {
       A: [
         {
@@ -11,10 +12,14 @@ module.exports = {
     rowName: 'A',
   },
   B: {
+    maxItemQuantity: 20,
     row: {
       B: [
         {
-          item: { name: 'Pixie Stix', price: 0.5 },
+          item: {
+            name: 'Pixie Stix',
+            price: 0.5,
+          },
           quantity: 0,
         },
         { item: { name: 'Dr. Pepper', price: 2.45 }, quantity: 0 },
