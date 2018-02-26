@@ -1,5 +1,4 @@
 const Row = require('./Row');
-const Item = require('./Item');
 const isValidPrice = require('./Validation/isValidPrice');
 const isValidName = require('./Validation/isValidName');
 const isValidItemIndex = require('./Validation/isValidItemIndex');
