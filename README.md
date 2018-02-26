@@ -29,4 +29,7 @@ Test the code using Jest:
 ```bash
 jest
 ```
-The tests have been written to run sequentially as a suite and if run individually may fail.
+The tests have been written to run sequentially as suites.
+
+## Screenshot
+![VendingMachine Screenshot](VendingMachineScreenCapture.png)
