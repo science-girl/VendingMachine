@@ -3,8 +3,7 @@ const Item = require('../src/Item');
 const Row = require('../src/Row');
 const inventoryWithTwoRowsData = require('../__mock__/Inventory/inventoryWithTwoRowsData');
 const inventoryWithThreeRowsData = require('../__mock__/Inventory/inventoryWithThreeRowsData');
-// A: {[{item, quantity}, {item,quantity}, {item, quantity}]}
-// B: {[{item, quantity}, {item,quantity}, {item, quantity}]}
+const inventoryAfterRemove = require('../__mock__/Inventory/inventoryAfterRemove');
 
 describe('Iventory tests', () => {
   let inventory;
@@ -54,6 +53,15 @@ describe('Iventory tests', () => {
       expect(inventoryWithItems.getInventory()).toEqual(inventoryWithThreeRowsData);
       expect(inventoryWithItems.removeRow('C')).toEqual(true);
     });
+    test('Remove an item from inventory', () => {
+      expect(inventoryWithItems.setItemQuantity('A', 0, 4)).toEqual(true);
+      expect(inventoryWithItems.getItemQuantity('A', 0)).toEqual(4);
+      expect(inventoryWithItems.getItem('A', 0).getName()).toEqual('Pepsi');
+      expect(inventoryWithItems.getItem('A', 1).getName()).toEqual('Coke');
+      expect(inventoryWithItems.removeItem('A', 0)).toEqual(true);
+      expect(inventoryWithItems.getInventory()).toEqual(inventoryAfterRemove);
+      expect(inventoryWithItems.getItem('A', 0).getName()).toEqual('Coke');
+    });
     test('Increase an item in inventory', () => {
       expect(inventoryWithItems.increaseQuantity('A', 0, 3)).toEqual(true);
     });
@@ -84,6 +92,12 @@ describe('Iventory tests', () => {
     });
     test('Remove a non-existent row from inventory', () => {
       expect(inventoryWithItems.removeRow('D')).toEqual(false);
+    });
+    test('Remove an item from non-existent row', () => {
+      expect(inventoryWithItems.removeItem('Z', 0)).toEqual(false);
+    });
+    test('Remove an item with an out-of-bound index', () => {
+      expect(inventoryWithItems.removeItem('A', -1)).toEqual(false);
     });
     test('Update price of a non-existent item in inventory', () => {
       expect(inventoryWithItems.updatePrice('D', 0, 3.0)).toEqual(false);

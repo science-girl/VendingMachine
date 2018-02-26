@@ -89,6 +89,12 @@ module.exports = class VendingMachine {
     return -1;
   }
 
+  // @params: string rowName, int itemIndex
+  // @returns: true if the item has been successfully deleted and false otherwise
+  unstockItem(rowName, itemIndex) {
+    if (!this.vendingInventory.isRowInInventory(rowName)) return false;
+  }
+
   // @params: string rowName, int itemIndex, location of item and
   //  int quantity to increase inventory
   // @returns: true if the restock was successful and false otherwise

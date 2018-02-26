@@ -133,6 +133,19 @@ module.exports = class Inventory {
     return false;
   }
 
+  // @params: string rowName, int itemIndex
+  // @returns: true if successfully removed and false otherwise
+  removeItem(rowName, itemIndex) {
+    if (
+      this.isRowInInventory(rowName) &&
+      isValidItemIndex(itemIndex) &&
+      this.inventory[rowName].isWithinBounds(itemIndex)
+    ) {
+      return this.inventory[rowName].removeItem(itemIndex);
+    }
+    return false;
+  }
+
   // @params: string rowName and int itemIndex of the item to retrive
   // @returns: the quantity corresponding to the given Name and -1 if the item does not exist
   getItemQuantity(rowName, itemIndex) {
