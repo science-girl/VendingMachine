@@ -95,8 +95,10 @@ describe('Vending Machine tests', () => {
       expect(vendingMachine.addNewItem('J', new Item('Cupcakes', 4.5), 3)).toEqual(0);
       expect(vendingMachine.getItemStock('J', 0)).toEqual(3);
     });
-    test('Remove an item in the vending machine', () => {
-      expect().toEqual();
+    test('Remove an item from the vending machine', () => {
+      expect(vendingMachine.getItemStock('J', 0)).toEqual(3);
+      expect(vendingMachine.unstockItem('J', 0)).toEqual(true);
+      expect(vendingMachine.getItemName('J', 0)).toEqual(false);
     });
   });
   describe('Edge Case Vending Machine Transactions', () => {
@@ -137,6 +139,12 @@ describe('Vending Machine tests', () => {
     });
     test('Add a new item to an existing row in the vending machine with invalid item', () => {
       expect(vendingMachine.addNewItem('A', 'NotAnItem', 3)).toEqual(-1);
+    });
+    test('Remove a non-existent item from the vending machine (invalid row)', () => {
+      expect(vendingMachine.unstockItem('Z', 0)).toEqual(false);
+    });
+    test('Remove a non-existent item from the vending machine (invalid itemIndex)', () => {
+      expect(vendingMachine.unstockItem('A', 200)).toEqual(false);
     });
     test('Purchase an item that does not exist in the vending machine (invalid row)', () => {
       expect(purchaseVendingMachine.stockChangeMachine(coinArray)).toEqual(true);

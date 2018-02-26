@@ -93,6 +93,7 @@ module.exports = class VendingMachine {
   // @returns: true if the item has been successfully deleted and false otherwise
   unstockItem(rowName, itemIndex) {
     if (!this.vendingInventory.isRowInInventory(rowName)) return false;
+    return this.vendingInventory.removeItem(rowName, itemIndex);
   }
 
   // @params: string rowName, int itemIndex, location of item and
@@ -114,7 +115,8 @@ module.exports = class VendingMachine {
     if (
       this.vendingInventory.isRowInInventory(rowName) &&
       isValidItemIndex(itemIndex) &&
-      this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
+      this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex) &&
+      this.vendingInventory.getItem(rowName, itemIndex) !== undefined
     ) {
       return this.vendingInventory.getItem(rowName, itemIndex).getName();
     }
@@ -125,8 +127,8 @@ module.exports = class VendingMachine {
   // @returns: quantity of specific item in inventory, else -1
   getItemStock(rowName, itemIndex) {
     if (
-      this.vendingInventory.isRowInInventory(rowName) ||
-      isValidItemIndex(itemIndex) ||
+      this.vendingInventory.isRowInInventory(rowName) &&
+      isValidItemIndex(itemIndex) &&
       this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
     ) {
       return this.vendingInventory.getItemQuantity(rowName, itemIndex);
