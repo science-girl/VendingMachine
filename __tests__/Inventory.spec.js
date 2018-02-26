@@ -2,7 +2,6 @@ const Inventory = require('../src/Inventory');
 const Item = require('../src/Item');
 const Row = require('../src/Row');
 const inventoryWithTwoRowsData = require('../__mock__/Inventory/inventoryWithTwoRowsData');
-const inventoryWithThreeRowsData = require('../__mock__/Inventory/inventoryWithThreeRowsData');
 const inventoryAfterRemove = require('../__mock__/Inventory/inventoryAfterRemove');
 
 describe('Iventory tests', () => {
