@@ -27,7 +27,10 @@ module.exports = {
           item: { name: 'Kit-Kats', price: 3.45 },
           quantity: 0,
         },
-        { item: { name: 'Fruit Leather', price: 2.75 }, quantity: 0 },
+        {
+          item: { name: 'Fruit Leather', price: 2.75 },
+          quantity: 0,
+        },
       ],
     },
     rowName: 'B',
@@ -35,15 +38,9 @@ module.exports = {
   C: {
     row: {
       C: [
-        {
-          item: { name: 'Mars Bar', price: 5.45 },
-          quantity: 0,
-        },
-        { item: { name: 'Toblerone', price: 4.25 }, quantity: 1 },
-        {
-          item: { name: 'Twix', price: 2.75 },
-          quantity: 0,
-        },
+        { item: { name: 'Mars Bar', price: 5.45 }, quantity: 0 },
+        { item: { name: 'Toblerone', price: 4.25 }, quantity: 5 },
+        { item: { name: 'Twix', price: 2.75 }, quantity: 0 },
       ],
     },
     rowName: 'C',

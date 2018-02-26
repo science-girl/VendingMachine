@@ -5,14 +5,12 @@ module.exports = {
         Dime: { quantity: 0, value: 0.1 },
         Nickel: { quantity: 0, value: 0.05 },
         OneDollar: { quantity: 0, value: 1 },
-        Quarter: {
-          quantity: 0,
-          value: 0.25,
-        },
+        Quarter: { quantity: 0, value: 0.25 },
         TwoDollars: { quantity: 0, value: 2 },
       },
     },
   },
+  maxChangeBalance: 500,
   vendingInventory: {
     inventory: {
       A: {
@@ -47,8 +45,11 @@ module.exports = {
       C: {
         row: {
           C: [
-            { item: { name: 'Mars Bar', price: 5.45 }, quantity: 0 },
-            { item: { name: 'Toblerone', price: 4.25 }, quantity: 0 },
+            {
+              item: { name: 'Mars Bar', price: 5.45 },
+              quantity: 0,
+            },
+            { item: { name: 'Toblerone', price: 4.25 }, quantity: 3 },
             { item: { name: 'Twix', price: 2.75 }, quantity: 0 },
           ],
         },

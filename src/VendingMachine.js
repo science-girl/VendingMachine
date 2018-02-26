@@ -11,11 +11,13 @@ const MAX_CHANGE_BALANCE = 500;
 
 module.exports = class VendingMachine {
   // Constructor
-  // @params: Inventory inventoryArray of items in vendingMachine, CDNCoinBank coinbank
+  // @params: Inventory inventoryArray of items in vendingMachine, CDNCoinBank coinbank,
+  // float maxChangeBalance
   // @returns: a vendingMachine with given inventory and changeMachine
-  constructor(inventoryArray, coinBank) {
+  constructor(inventoryArray, coinBank, maxChangeBalance) {
     this.changeMachine = coinBank || new CDNCoinBank();
     this.vendingInventory = inventoryArray || new Inventory();
+    this.setMaxChangeBalance(maxChangeBalance);
   }
 
   // @params: Coin array
@@ -28,6 +30,23 @@ module.exports = class VendingMachine {
       return true;
     }
     return false;
+  }
+
+  // @params: float maxChangeBalance
+  // @returns: returns true if maxChangeBalance has been set and false otherwise
+  setMaxChangeBalance(maxChangeBalance) {
+    if (maxChangeBalance > 0 && !Number.isNaN(maxChangeBalance)) {
+      this.maxChangeBalance = maxChangeBalance;
+      return true;
+    }
+    this.maxChangeBalance = MAX_CHANGE_BALANCE;
+    return false;
+  }
+
+  // @params: none
+  // @returns: returns maxChangeBalance
+  getMaxChangeBalance() {
+    return this.maxChangeBalance;
   }
 
   // @params: string rowName and int itemIndex to replace with
@@ -144,7 +163,8 @@ module.exports = class VendingMachine {
       payment === 0 ||
       !this.vendingInventory.isRowInInventory(rowName) ||
       !isValidItemIndex(itemIndex) ||
-      !this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
+      !this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex) ||
+      this.changeMachine.getBalance() + payment > this.getMaxChangeBalance()
     ) {
       return false;
     }
@@ -187,7 +207,7 @@ module.exports = class VendingMachine {
   // @params: none
   // @returns: float diff between the maximum and actual balance
   getChangeDiffFromMax() {
-    return MAX_CHANGE_BALANCE - this.changeMachine.getBalance();
+    return this.getMaxChangeBalance() - this.changeMachine.getBalance();
   }
 
   // @params: none
