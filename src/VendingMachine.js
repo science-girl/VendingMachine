@@ -65,11 +65,24 @@ module.exports = class VendingMachine {
       return false;
     }
     const itemPrice = this.vendingInventory.getItem(rowName, itemIndex).getPrice();
-    // check if item is in inventory; check if payment is > price
-    if (this.vendingInventory.getItemQuantity(rowName, itemIndex) >= 1 && itemPrice <= payment) {
+    // Best case scenario - no change needed
+    if (itemPrice === payment && this.getItemStock(rowName, itemIndex) >= 1) {
+      // deposit itemPrice
+      coinArray.forEach(coin => this.changeMachine.deposit(coin));
+      // decrement item
+      const item = this.vendingInventory.getItem(rowName, itemIndex);
+      this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
+
+      return [item, []];
+    } else if (this.getItemStock(rowName, itemIndex) >= 1 && itemPrice < payment) {
+      // check if item is in inventory; check if payment is > price
       // check that change can be dispensed before proceeding with rest of transaction
       // - add coinArray to balance and then subtract change required
-      if (payment + this.changeMachine.getBalance() > payment - itemPrice) {
+      if (
+        payment + this.changeMachine.getBalance() >
+        payment - itemPrice
+        /* TODO: check if the change required can be paid with the coins on hand */
+      ) {
         // deposit itemPrice
         coinArray.forEach(coin => this.changeMachine.deposit(coin));
         // get change
@@ -80,6 +93,7 @@ module.exports = class VendingMachine {
 
         return [item, change];
       }
+      return false;
     }
     return false;
   }
