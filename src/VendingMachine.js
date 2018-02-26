@@ -90,13 +90,7 @@ module.exports = class VendingMachine {
     if (!(newItem instanceof Item)) return -1;
     // if the rowName is in inventory, add it to the end of the row
     if (this.vendingInventory.isRowInInventory(rowName)) {
-      this.vendingInventory.getRow(rowName).addItem(newItem);
-      this.setQuantity(
-        rowName,
-        this.vendingInventory.getRow(rowName).getNumberOfItemsInRow() - 1,
-        quantity,
-      );
-      return this.vendingInventory.getRow(rowName).getNumberOfItemsInRow() - 1;
+      return this.vendingInventory.addItem(rowName, newItem, quantity);
     }
     // if the rowName is not in inventory, create it; item will always be first element
     if (this.vendingInventory.addRow(new Row(rowName, [newItem]))) {

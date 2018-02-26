@@ -23,16 +23,16 @@ describe('Row tests', () => {
       expect(row.getRow()).toEqual(rowWithThreeItemsData);
     });
     test('Add item to a row', () => {
-      expect(row.addItem(item4)).toEqual(true);
+      expect(row.addItem(item4)).toEqual(3);
       expect(row.getRow()).toEqual(rowWithFourItemsData);
     });
     test('Add same item to a row', () => {
-      expect(row.addItem(item4)).toEqual(true);
-      expect(row.addItem(item4)).toEqual(true);
+      expect(row.addItem(item4)).toEqual(3);
+      expect(row.addItem(item4)).toEqual(4);
       expect(row.getNumberOfItemsInRow()).toEqual(5);
     });
     test('Remove item from a row', () => {
-      expect(row.addItem(item4)).toEqual(true);
+      expect(row.addItem(item4)).toEqual(3);
       expect(row.removeItem(3)).toEqual(true);
       expect(row.getRow()).toEqual(rowWithThreeItemsData);
     });
@@ -90,10 +90,10 @@ describe('Row tests', () => {
       expect(rowWithNoItems).toEqual({ row: { default: [] }, rowName: 'default' });
     });
     test('Add item to a row with no items', () => {
-      expect(rowWithNoItems.addItem(item1)).toEqual(true);
+      expect(rowWithNoItems.addItem(item1)).toEqual(0);
     });
     test('Add item to a row with a non-item object', () => {
-      expect(row.addItem('notAnItem')).toEqual(false);
+      expect(row.addItem('notAnItem')).toEqual(-1);
     });
     test('Increase item quantity by a negative number', () => {
       expect(row.increaseItemQuantity(0, -2)).toEqual(false);

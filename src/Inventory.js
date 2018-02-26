@@ -1,4 +1,5 @@
 const Row = require('./Row');
+const Item = require('./Item');
 const isValidPrice = require('./Validation/isValidPrice');
 const isValidName = require('./Validation/isValidName');
 const isValidItemIndex = require('./Validation/isValidItemIndex');
@@ -146,6 +147,17 @@ module.exports = class Inventory {
     return false;
   }
 
+  // @params: string rowName, Item item, int quantity
+  // @returns: index of item if successfully added and -1 otherwise
+  addItem(rowName, item, quantity) {
+    if (this.isRowInInventory(rowName) && item instanceof Item && this.isRoomForMore(rowName)) {
+      const itemIndex = this.inventory[rowName].addItem(item);
+      this.inventory[rowName].setItemQuantity(itemIndex, quantity);
+      return itemIndex;
+    }
+    return -1;
+  }
+
   // @params: string rowName and int itemIndex of the item to retrive
   // @returns: the quantity corresponding to the given Name and -1 if the item does not exist
   getItemQuantity(rowName, itemIndex) {
@@ -174,5 +186,11 @@ module.exports = class Inventory {
   // @returns true if the row exists and false otherwise
   isRowInInventory(rowName) {
     return rowName in this.inventory;
+  }
+
+  // @params: string rowName to determine if another item can be added
+  // @returns: true if more items can be added and false if there is no room in the row
+  isRoomForMore(rowName) {
+    return this.inventory[rowName].getNumberOfItemsInRow() < this.getMaxRowSize();
   }
 };

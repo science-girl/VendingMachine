@@ -128,13 +128,13 @@ module.exports = class Row {
   }
 
   // @params:  Item item to insert into a row
-  // @returns: true if the item was added and false otherwise
+  // @returns: index if the item was added and -1 otherwise
   addItem(item) {
     if (item instanceof Item) {
       this.row[this.rowName].push(item);
-      return true;
+      return this.getNumberOfItemsInRow() - 1;
     }
-    return false;
+    return -1;
   }
 
   // @params:  Item item to delete from the row
