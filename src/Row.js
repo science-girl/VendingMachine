@@ -56,7 +56,11 @@ module.exports = class Row {
   // @params: int itemIndex, int quantity to set
   // @returns: true if quantity was set and false otherwise
   setItemQuantity(itemIndex, quantity) {
-    if (isValidItemIndex(itemIndex) && isValidQuantity(quantity)) {
+    if (
+      isValidItemIndex(itemIndex) &&
+      isValidQuantity(quantity) &&
+      this.isWithinBounds(itemIndex)
+    ) {
       this.row[this.rowName][itemIndex].quantity = quantity;
       return true;
     }
