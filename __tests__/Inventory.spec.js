@@ -34,6 +34,11 @@ describe('Iventory tests', () => {
       expect(inventoryWithItems.addRow(rowC)).toEqual(true);
       expect(inventoryWithItems.getInventory()).toEqual(inventoryWithThreeRowsData);
     });
+    test('Get default row size and reset it to 20', () => {
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(100);
+      expect(inventoryWithItems.setMaxRowSize(20)).toEqual(true);
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(20);
+    });
     test('Update price of a specific item in inventory', () => {
       expect(inventoryWithItems.updatePrice('A', 0, 3.0)).toEqual(true);
     });
