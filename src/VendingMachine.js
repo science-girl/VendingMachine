@@ -1,7 +1,8 @@
 const isValidItemIndex = require('./Validation/isValidItemIndex');
 const CDNCoinBank = require('../src/CDNCoinBank');
 const Inventory = require('../src/Inventory');
-const toFloatingPoint = require('./Validation/toFloatingPoint');
+const toFloatingPoint = require('./utils/toFloatingPoint');
+const addUpChange = require('./utils/addUpChange');
 
 const MAX_CHANGE_BALANCE = 500;
 
@@ -55,7 +56,7 @@ module.exports = class VendingMachine {
   // @params: string rowName, int itemIndex, array of Coin payment
   // @returns: [Item item, Coin changeArray] if purchase went through and false otherwise
   purchaseItem(rowName, itemIndex, coinArray) {
-    const payment = this.addUpChange(coinArray);
+    const payment = addUpChange(coinArray);
     if (
       payment === 0 ||
       !this.vendingInventory.isRowInInventory(rowName) ||
@@ -122,14 +123,5 @@ module.exports = class VendingMachine {
     }, 0);
 
     return this.getChangeDiffFromMax() - sum > 0;
-  }
-
-  // @params: Coin coinArray to add
-  // @returns: the sum of the given coins
-  addUpChange(coinArray) {
-    return coinArray.reduce((result, coin) => {
-      const coinSum = coin.getValue() * coin.getQuantity();
-      return toFloatingPoint(result + coinSum);
-    }, 0);
   }
 };

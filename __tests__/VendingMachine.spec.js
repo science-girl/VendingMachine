@@ -75,7 +75,7 @@ describe('Vending Machine tests', () => {
     test('Add a new item to the vending machine', () => {
       expect().toEqual();
     });
-    test('Swap an item in the vending machine for a new item', () => {
+    test('Replace an item in the vending machine', () => {
       expect().toEqual();
     });
     test('Remove an item in the vending machine', () => {

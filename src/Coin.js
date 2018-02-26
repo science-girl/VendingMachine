@@ -1,6 +1,6 @@
 const isValidQuantity = require('./Validation/isValidQuantity');
 const isValidValue = require('./Validation/isValidValue');
-const toFloatingPoint = require('./Validation/toFloatingPoint');
+const toFloatingPoint = require('./utils/toFloatingPoint');
 // TODO: figure out how to set these as protected variables
 const MIN_COIN_VALUE = 0.05;
 
