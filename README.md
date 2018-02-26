@@ -6,7 +6,7 @@ TDD Javascript Vending Machine
 A Javascript class-based test-driven-design implementation of a vending machine.
 
 ### Screenshot
-
+![VendingMachine Screenshot](VendingMachineScreenCapture.png)
 
 ## Technologies
 
@@ -29,4 +29,21 @@ Test the code using Jest:
 ```bash
 jest
 ```
-The tests have been written to run sequentially as a suite and if run individually may fail.
+The tests have been written to run sequentially as suites.
+
+## Features
+
+* Returns change as coins
+* Dispenses the smallest number of coins when returning change
+* Built modularly to accomodate any number of varied items
+* Can localized to accept currencies other than CDN with few changes
+* Prints inventory
+* Dispenses inventory based on payment
+* Has functionality for refilling inventory
+* Has functionality for re-supplying change
+
+## Future Plans
+
+* Create an interface implementation (not native to Javascript) that would allow for more easeful internationalization
+* Create a maximum inventory size and maximum change supply
+
