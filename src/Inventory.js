@@ -121,7 +121,7 @@ module.exports = class Inventory {
   }
 
   // @params: string rowName and int itemIndex of the item to retrive
-  // @returns: the Item corresponding to the given Name and {} if the item does not exist
+  // @returns: the Item corresponding to the given Name and false if the item does not exist
   getItem(rowName, itemIndex) {
     if (
       this.isRowInInventory(rowName) &&
@@ -130,7 +130,7 @@ module.exports = class Inventory {
     ) {
       return this.inventory[rowName].getItem(itemIndex);
     }
-    return {};
+    return false;
   }
 
   // @params: string rowName and int itemIndex of the item to retrive

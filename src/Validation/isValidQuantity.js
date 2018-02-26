@@ -5,4 +5,4 @@ module.exports = quantity =>
   // - must exist
   // - be a positive integer
   // - be an integer
-  !(!quantity || quantity < 0 || quantity % 1 !== 0);
+  !(quantity < 0 || !Number.isInteger(quantity));

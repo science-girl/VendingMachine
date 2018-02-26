@@ -1,6 +1,9 @@
 const isValidItemIndex = require('./Validation/isValidItemIndex');
+const isValidQuantity = require('./Validation/isValidQuantity');
 const CDNCoinBank = require('../src/CDNCoinBank');
 const Inventory = require('../src/Inventory');
+const Item = require('./Item');
+const Row = require('./Row');
 const toFloatingPoint = require('./utils/toFloatingPoint');
 const addUpChange = require('./utils/addUpChange');
 
@@ -27,6 +30,65 @@ module.exports = class VendingMachine {
     return false;
   }
 
+  // @params: string rowName and int itemIndex to replace with
+  // Item newItem and optional int quantity
+  // @returns: true if the replacement was successful and false otherwise
+  replaceItem(rowName, itemIndex, newItem, quantity) {
+    if (
+      this.vendingInventory.isRowInInventory(rowName) &&
+      isValidItemIndex(itemIndex) &&
+      newItem instanceof Item
+    ) {
+      this.vendingInventory.updateName(rowName, itemIndex, newItem.getName());
+      this.vendingInventory.updatePrice(rowName, itemIndex, newItem.getPrice());
+      // check if quantity has been supplied:
+      if (isValidQuantity(quantity)) {
+        this.vendingInventory.setItemQuantity(rowName, itemIndex, quantity);
+      } else {
+        // set to 0 if not supplied
+        this.vendingInventory.setItemQuantity(rowName, itemIndex, 0);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // @params: string rowName, int quantity
+  // @returns: none.
+  setQuantity(rowName, itemIndex, quantity) {
+    if (isValidQuantity(quantity)) {
+      this.vendingInventory.setItemQuantity(rowName, itemIndex, quantity);
+      // set to quantity to 0 otherwise
+    } else {
+      this.vendingInventory.setItemQuantity(rowName, itemIndex, 0);
+    }
+  }
+
+  // @params: string rowName, Item item, int quantity
+  // @returns: itemIndex of the item if it was successfully inserted, -1 otherwise
+  // - creates a new row if the given rowName does not exist
+  addNewItem(rowName, newItem, quantity) {
+    if (!(newItem instanceof Item)) return -1;
+    // if the rowName is in inventory, add it to the end of the row
+    if (this.vendingInventory.isRowInInventory(rowName)) {
+      this.vendingInventory.getRow(rowName).addItem(newItem);
+      this.setQuantity(
+        rowName,
+        this.vendingInventory.getRow(rowName).getNumberOfItemsInRow() - 1,
+        quantity,
+      );
+      return this.vendingInventory.getRow(rowName).getNumberOfItemsInRow() - 1;
+    }
+    // if the rowName is not in inventory, create it; item will always be first element
+    if (this.vendingInventory.addRow(new Row(rowName, [newItem]))) {
+      this.vendingInventory.getRow(rowName).addItem(newItem);
+      this.setQuantity(rowName, 0, quantity);
+      return 0;
+    }
+
+    return -1;
+  }
+
   // @params: string rowName, int itemIndex, location of item and
   //  int quantity to increase inventory
   // @returns: true if the restock was successful and false otherwise
@@ -38,6 +100,19 @@ module.exports = class VendingMachine {
   // @returns: listing of items in inventory
   getInventory() {
     return this.vendingInventory.getInventory();
+  }
+
+  // @params: string rowName, int itemIndex
+  // @returns: the name of the item, false otherwise
+  getItemName(rowName, itemIndex) {
+    if (
+      this.vendingInventory.isRowInInventory(rowName) &&
+      isValidItemIndex(itemIndex) &&
+      this.vendingInventory.getRow(rowName).isWithinBounds(itemIndex)
+    ) {
+      return this.vendingInventory.getItem(rowName, itemIndex).getName();
+    }
+    return false;
   }
 
   // @params: string rowName, int itemIndex
@@ -88,7 +163,6 @@ module.exports = class VendingMachine {
         // change available so we should reverse the deposit and not vend an item
 
         if (change.length === 0) {
-          console.log('not enough change of the right denomination');
           coinArray.forEach(coin => this.changeMachine.withdraw(coin));
         } else {
           const item = this.vendingInventory.getItem(rowName, itemIndex);

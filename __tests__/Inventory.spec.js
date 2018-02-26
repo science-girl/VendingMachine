@@ -74,7 +74,7 @@ describe('Iventory tests', () => {
       expect(inventoryWithItems.addRow(rowA)).toEqual(false);
     });
     test('Get an item in inventory with an invalid itemIndex', () => {
-      expect(inventoryWithItems.getItem('A', -1)).toEqual({});
+      expect(inventoryWithItems.getItem('A', -1)).toEqual(false);
     });
     test('Get a specific item quantity with an invalid itemIndex', () => {
       expect(inventoryWithItems.getItemQuantity('A', 'a')).toEqual(-1);

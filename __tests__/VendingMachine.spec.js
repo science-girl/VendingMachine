@@ -1,9 +1,11 @@
 const VendingMachine = require('../src/VendingMachine');
 const Coin = require('../src/Coin');
+const Item = require('../src/Item');
 const emptyMachineData = require('../__mock__/VendingMachine/emptyMachineMockData');
 const threeByThreeMachineData = require('../__mock__/VendingMachine/threeByThreeVendingMachineData');
 const inventoryData = require('../__mock__/VendingMachine/vendingMachineObject');
 const printInventoryData = require('../__mock__/VendingMachine/printInventoryData');
+const inventoryAfterAdd = require('../__mock__/VendingMachine/inventoryAfterAdd');
 
 describe('Vending Machine tests', () => {
   let vendingMachine;
@@ -67,16 +69,31 @@ describe('Vending Machine tests', () => {
     test('Get number of item in stock (0)', () => {
       expect(vendingMachine.getItemStock('A', 1)).toEqual(0);
     });
+    test('Get name of item in stock', () => {
+      expect(vendingMachine.getItemName('A', 1)).toEqual('Coke');
+    });
     test('Get number of item in stock (> 0)', () => {
       expect(vendingMachine.getItemStock('A', 2)).toEqual(0);
       expect(vendingMachine.restockItem('A', 2, 3));
       expect(vendingMachine.getItemStock('A', 2)).toEqual(3);
     });
-    test('Add a new item to the vending machine', () => {
-      expect().toEqual();
-    });
     test('Replace an item in the vending machine', () => {
-      expect().toEqual();
+      expect(vendingMachine.getItemStock('A', 2)).toEqual(3);
+      expect(vendingMachine.replaceItem('A', 2, new Item('Licorice', 4.2), 4)).toEqual(true);
+      expect(vendingMachine.getItemStock('A', 2)).toEqual(4);
+      expect(vendingMachine.getItemName('A', 2)).toEqual('Licorice');
+    });
+    test('Add a new item to an existing row in the vending machine', () => {
+      expect(vendingMachine.addNewItem('A', new Item('Kombucha', 4.2), 3)).toEqual(3);
+      expect(vendingMachine.getInventory()).toEqual(inventoryAfterAdd);
+    });
+    test('Add a new item to an existing row in the vending machine with no quantity', () => {
+      expect(vendingMachine.addNewItem('A', new Item('Seaweed', 4.2))).toEqual(4);
+      expect(vendingMachine.getItemStock('A', 4)).toEqual(0);
+    });
+    test('Add a new item to a row that does not exist in the vending machine', () => {
+      expect(vendingMachine.addNewItem('J', new Item('Cupcakes', 4.5), 3)).toEqual(0);
+      expect(vendingMachine.getItemStock('J', 0)).toEqual(3);
     });
     test('Remove an item in the vending machine', () => {
       expect().toEqual();
@@ -88,6 +105,38 @@ describe('Vending Machine tests', () => {
     });
     test('Create a vending machine without specifying initial amount of change available', () => {
       expect(emptyVendingMachine).toEqual(emptyMachineData);
+    });
+    test('Get name of item not in stock (invalid rowName)', () => {
+      expect(vendingMachine.getItemName('Z', 1)).toEqual(false);
+    });
+    test('Get name of item not in stock (invalid itemIndex)', () => {
+      expect(vendingMachine.getItemName('A', 27)).toEqual(false);
+    });
+    test('Get name of item not in stock (invalid itemIndex)', () => {
+      expect(vendingMachine.getItemName('A', -1)).toEqual(false);
+    });
+    test('Replace an item not in stock (invalid itemIndex)', () => {
+      expect(vendingMachine.replaceItem('A', -1, new Item('Licorice', 4.2), 4)).toEqual(false);
+    });
+    test('Replace an item not in stock (invalid rowName)', () => {
+      expect(vendingMachine.replaceItem('Z', 1, new Item('Licorice', 4.2), 4)).toEqual(false);
+    });
+    test('Replace an item not in stock (invalid item)', () => {
+      expect(vendingMachine.replaceItem('A', 1, 'NotAnItem', 4)).toEqual(false);
+    });
+    test('Replace an item in not in stock (invalid quantity)', () => {
+      expect(vendingMachine.restockItem('A', 2, 6)).toEqual(true);
+      expect(vendingMachine.getItemStock('A', 2)).toEqual(10);
+      expect(vendingMachine.replaceItem('A', 2, new Item('Kombucha', 4.33), -5)).toEqual(true);
+      expect(vendingMachine.getItemStock('A', 2)).toEqual(0);
+      expect(vendingMachine.getItemName('A', 2)).toEqual('Kombucha');
+    });
+    test('Add a new item to an existing row in the vending machine with invalid quantity (negative)', () => {
+      expect(vendingMachine.addNewItem('A', new Item('Pretzels', 4.2), -3)).toEqual(5);
+      expect(vendingMachine.getItemStock('A', 5)).toEqual(0);
+    });
+    test('Add a new item to an existing row in the vending machine with invalid item', () => {
+      expect(vendingMachine.addNewItem('A', 'NotAnItem', 3)).toEqual(-1);
     });
     test('Purchase an item that does not exist in the vending machine (invalid row)', () => {
       expect(purchaseVendingMachine.stockChangeMachine(coinArray)).toEqual(true);
