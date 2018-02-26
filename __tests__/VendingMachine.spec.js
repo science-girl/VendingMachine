@@ -108,7 +108,7 @@ describe('Vending Machine tests', () => {
       expect(purchaseVendingMachine.purchaseItem('A', 1, payment)).toEqual(false);
       expect(purchaseVendingMachine.getChangeBalance()).toEqual(10.3);
     });
-    test('Purchase the last item in a row', () => {
+    test('Purchase the last item', () => {
       expect(purchaseVendingMachine.stockChangeMachine(coinArray)).toEqual(true);
       expect(purchaseVendingMachine.getChangeBalance()).toEqual(10.3);
       const payment = [new Coin(2, 2), new Coin(0.25, 1)];
@@ -121,17 +121,19 @@ describe('Vending Machine tests', () => {
       ]);
       expect(purchaseVendingMachine.getItemStock('A', 1)).toEqual(0);
     });
-    test('Purchase an item when not enough payment given', () => {
+    test('Purchase an item when not enough payment given (item is $1.45 and $1.25 is given)', () => {
       expect(purchaseVendingMachine.stockChangeMachine([new Coin(0.05, 1)])).toEqual(true);
       expect(purchaseVendingMachine.restockItem('A', 1, 5)).toEqual(true);
       const payment = [new Coin(1, 1), new Coin(0.25, 1)];
       expect(purchaseVendingMachine.purchaseItem('A', 1, payment)).toEqual(false);
     });
-    test('Purchase an item when not enough change available', () => {
+    test('Purchase an item when bank has enough for change, but not enough coins of the right denomination available', () => {
       expect(purchaseVendingMachine.stockChangeMachine([new Coin(0.1, 1)])).toEqual(true);
-      expect(purchaseVendingMachine.restockItem('A', 1, 5)).toEqual(true);
+      expect(purchaseVendingMachine.getItemStock('A', 1)).toEqual(5);
       const payment = [new Coin(1, 1), new Coin(0.25, 2)];
       expect(purchaseVendingMachine.purchaseItem('A', 1, payment)).toEqual(false);
+      expect(purchaseVendingMachine.getChangeBalance()).toEqual(0.1);
+      expect(purchaseVendingMachine.getItemStock('A', 1)).toEqual(5);
     });
     test('Check if change machine can be refilled', () => {
       expect(vendingMachine.canRefillCoins(largeCoinArray)).toEqual(false);

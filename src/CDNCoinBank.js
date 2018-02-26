@@ -130,39 +130,6 @@ module.exports = class CDNCoinBank {
     return this.coinBank.getCoinBalance(DENOMINATIONS[4].name);
   }
 
-  // @params: float changeRequired
-  // @returns: an array of change to dispense or an empty array
-  // if no change can be made otherwise false
-  possibleChangeDispensed(changeRequired) {
-    let change = changeRequired * 100;
-    const changeToReturn = [];
-    // check if change requested can be given:
-    if (this.getBalance() < changeRequired) return false;
-    // check if change is required
-    if (changeRequired === 0) return changeToReturn;
-
-    // find largest denomination that is <= to changeRequired
-    DENOMINATIONS.forEach((denomination) => {
-      if (change >= denomination.value * 100) {
-        const numCoins = Math.floor(change / (denomination.value * 100));
-        // check if the number of coins required can be dispensed
-        if (numCoins <= this.coinBank.getCoinNumber(denomination.name)) {
-          change %= denomination.value * 100;
-          // console.log(`change after ${change}`);
-          //
-          // console.log('denom ', denomination.name);
-          // console.log('coins avail ', this.coinBank.getCoinNumber(denomination.name));
-          // console.log('coins req ', numCoins);
-          const coinToWithdraw = new Coin(denomination.value, numCoins);
-          // subtract coins from the bank and return coins if balance exists in bank
-          this.withdraw(coinToWithdraw);
-          changeToReturn.push(coinToWithdraw);
-        }
-      }
-    });
-    return changeToReturn;
-  }
-
   // @params: Coin coin
   // @returns: true if the coin was withdrawn and false otherwise
   withdraw(coin) {
@@ -226,8 +193,6 @@ module.exports = class CDNCoinBank {
     const changeToReturn = [];
     // check if change requested can be given:
     if (this.getBalance() < changeRequired) return false;
-    // check if change is required
-    if (changeRequired === 0) return changeToReturn;
 
     // find largest denomination that is <= to changeRequired
     DENOMINATIONS.forEach((denomination) => {

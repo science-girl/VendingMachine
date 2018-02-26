@@ -78,20 +78,23 @@ module.exports = class VendingMachine {
       // check if item is in inventory; check if payment is > price
       // check that change can be dispensed before proceeding with rest of transaction
       // - add coinArray to balance and then subtract change required
-      if (
-        payment + this.changeMachine.getBalance() >
-        payment - itemPrice
-        /* TODO: check if the change required can be paid with the coins on hand */
-      ) {
+      if (payment + this.changeMachine.getBalance() > payment - itemPrice) {
         // deposit itemPrice
         coinArray.forEach(coin => this.changeMachine.deposit(coin));
         // get change
         const change = this.changeMachine.getChange(payment - itemPrice);
-        // decrement item
-        const item = this.vendingInventory.getItem(rowName, itemIndex);
-        this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
+        // if change is [], we know that there wasn't the right denomination of
+        // change available so we should reverse the deposit and not vend an item
 
-        return [item, change];
+        if (change.length === 0) {
+          console.log('not enough change of the right denomination');
+          coinArray.forEach(coin => this.changeMachine.withdraw(coin));
+        } else {
+          const item = this.vendingInventory.getItem(rowName, itemIndex);
+          // decrement item
+          this.vendingInventory.decreaseQuantity(rowName, itemIndex, 1);
+          return [item, change];
+        }
       }
       return false;
     }
