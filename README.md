@@ -38,13 +38,13 @@ The tests have been written to run sequentially as suites.
 
 * Returns change as coins
 * Dispenses the smallest number of coins when returning change
-* Built modularly to accommodate any number of varied items
-* Can localized to accept currencies other than CDN with few changes
+* Built with modularity in mind to accommodate any number of varied items
+* Can be localized to accept currencies other than CDN with few changes
 * Prints inventory
 * Dispenses inventory based on payment
 * Has functionality for refilling inventory
 * Has functionality for re-supplying change
-* Has a maximum change supply
+* Has a maximum change supply set by the vending machine creator
 
 ## Future Plans
 
