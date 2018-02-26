@@ -39,9 +39,17 @@ describe('Iventory tests', () => {
       expect(inventoryWithItems.setMaxRowSize(20)).toEqual(true);
       expect(inventoryWithItems.getMaxRowSize()).toEqual(20);
     });
-    test('More room is available in the row for items', () => {
-      expect(inventoryWithItems.setMaxRowSize(4)).toEqual(true);
-      expect(inventoryWithItems.getMaxRowSize()).toEqual(4);
+    test('No room is available in the row for an additional item', () => {
+      expect(inventoryWithItems.setMaxRowSize(3)).toEqual(true);
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(3);
+      expect(inventoryWithItems.addItem('A', new Item('Bear Claw', 4.2), 3)).toEqual(2);
+      expect(inventoryWithItems.addItem('A', new Item('Apple Fritter', 4.2), 3)).toEqual(3);
+      expect(inventoryWithItems.addItem('A', new Item('Apple Fritter', 4.2), 3)).toEqual(-1);
+    });
+    test('Room is available in the row for an additional item', () => {
+      expect(inventoryWithItems.setMaxRowSize(3)).toEqual(true);
+      expect(inventoryWithItems.getMaxRowSize()).toEqual(3);
+      expect(inventoryWithItems.addItem('A', new Item('Bear Claw', 4.2), 3)).toEqual(2);
     });
     test('Update price of a specific item in inventory', () => {
       expect(inventoryWithItems.updatePrice('A', 0, 3.0)).toEqual(true);

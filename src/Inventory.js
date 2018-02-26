@@ -191,6 +191,6 @@ module.exports = class Inventory {
   // @params: string rowName to determine if another item can be added
   // @returns: true if more items can be added and false if there is no room in the row
   isRoomForMore(rowName) {
-    return this.inventory[rowName].getNumberOfItemsInRow() < this.getMaxRowSize();
+    return this.inventory[rowName].getNumberOfItemsInRow() <= this.getMaxRowSize();
   }
 };
