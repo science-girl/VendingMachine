@@ -1,6 +1,7 @@
 const Item = require('./Item');
 const isValidName = require('./Validation/isValidName');
 const isValidQuantity = require('./Validation/isValidQuantity');
+const isValidItemIndex = require('./Validation/isValidItemIndex');
 
 const ITEM_ACCESSOR = 'item';
 const QUANTITY_ACCESSOR = 'quantity';
@@ -50,6 +51,16 @@ module.exports = class Row {
   // @returns: array of Items and quantities in this row
   getRowItems() {
     return this.row[this.rowName];
+  }
+
+  // @params: int itemIndex, int quantity to set
+  // @returns: true if quantity was set and false otherwise
+  setItemQuantity(itemIndex, quantity) {
+    if (isValidItemIndex(itemIndex) && isValidQuantity(quantity)) {
+      this.row[this.rowName][itemIndex].quantity = quantity;
+      return true;
+    }
+    return false;
   }
 
   // @params: int itemIndex, int amtToIncrease

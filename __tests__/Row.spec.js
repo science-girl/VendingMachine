@@ -64,6 +64,11 @@ describe('Row tests', () => {
     test('Get item ', () => {
       expect(row.getItem(0)).toEqual({ name: 'Pepsi', price: 2.5 });
     });
+    test('Set item quantity', () => {
+      expect(row.getItemQuantity(0)).toEqual(0);
+      expect(row.setItemQuantity(0, 4)).toEqual(true);
+      expect(row.getItemQuantity(0)).toEqual(4);
+    });
     test('Get item price', () => {
       expect(row.getItemPrice(0)).toEqual(2.5);
     });
@@ -114,6 +119,16 @@ describe('Row tests', () => {
     });
     test('Remove from row with no items', () => {
       expect(rowWithNoItems.removeItem(0)).toEqual(false);
+    });
+    test('Set item quantity with an out-of-bound index', () => {
+      expect(row.getItemQuantity(0)).toEqual(0);
+      expect(row.setItemQuantity(-1, 4)).toEqual(false);
+      expect(row.getItemQuantity(0)).toEqual(0);
+    });
+    test('Set item quantity with a negative quantity', () => {
+      expect(row.getItemQuantity(0)).toEqual(0);
+      expect(row.setItemQuantity(0, -4)).toEqual(false);
+      expect(row.getItemQuantity(0)).toEqual(0);
     });
     test('Get item quantity with an out-of-bound item index', () => {
       expect(row.getItemQuantity(8)).toEqual(-1);
